@@ -1,0 +1,147 @@
+/* Admin workspace readability layer.
+   Scoped to administrator pages so student and public typography stay unchanged. */
+.role-admin-content {
+  --admin-type: 16px;
+  --admin-type-small: 13.5px;
+  --admin-type-label: 14px;
+  --admin-type-control: 15px;
+  color: #14213d;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: var(--admin-type);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.role-admin-content h1 {
+  font-size: clamp(2rem, 3vw, 2.75rem) !important;
+  line-height: 1.12 !important;
+  letter-spacing: -.035em !important;
+}
+
+.role-admin-content h2 {
+  font-size: clamp(1.25rem, 1.8vw, 1.55rem) !important;
+  line-height: 1.25 !important;
+  letter-spacing: -.018em;
+}
+
+.role-admin-content h3 {
+  font-size: 1.125rem !important;
+  line-height: 1.35 !important;
+}
+
+.role-admin-content h4 {
+  font-size: 1rem !important;
+  line-height: 1.4 !important;
+}
+
+.role-admin-content p,
+.role-admin-content li,
+.role-admin-content dd,
+.role-admin-content .muted {
+  font-size: 15px !important;
+  line-height: 1.62 !important;
+}
+
+.role-admin-content small,
+.role-admin-content [class*="subtitle"],
+.role-admin-content [class*="helper"],
+.role-admin-content [class*="description"] {
+  font-size: var(--admin-type-small) !important;
+  line-height: 1.5 !important;
+}
+
+.role-admin-content label,
+.role-admin-content legend,
+.role-admin-content dt,
+.role-admin-content th {
+  color: #172746;
+  font-size: var(--admin-type-label) !important;
+  font-weight: 700 !important;
+  line-height: 1.42 !important;
+}
+
+.role-admin-content input,
+.role-admin-content select,
+.role-admin-content textarea {
+  min-height: 46px;
+  color: #172033 !important;
+  font-size: var(--admin-type-control) !important;
+  line-height: 1.5 !important;
+}
+
+.role-admin-content textarea { min-height: 104px; }
+.role-admin-content input::placeholder,
+.role-admin-content textarea::placeholder { color: #6c7890 !important; opacity: 1; }
+
+.role-admin-content button,
+.role-admin-content a[class*="button"],
+.role-admin-content [role="tab"],
+.role-admin-content [class*="tab"] button {
+  font-size: 14.5px !important;
+  line-height: 1.35 !important;
+}
+
+.role-admin-content table { font-size: 14px !important; line-height: 1.5; }
+.role-admin-content th { letter-spacing: .025em !important; }
+.role-admin-content td { color: #23324e; font-size: 14px !important; line-height: 1.5 !important; }
+
+.role-admin-content .alert,
+.role-admin-content .admin-empty-state,
+.role-admin-content [class*="empty"],
+.role-admin-content [class*="status"],
+.role-admin-content [class*="note"] {
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+.role-admin-content .admin-summary-grid small,
+.role-admin-content .teacher-admin-summary small,
+.role-admin-content .admin-stats-grid small,
+.role-admin-content .admin-stat-card small {
+  font-size: 13.5px !important;
+}
+
+.role-admin-content .admin-summary-grid strong,
+.role-admin-content .teacher-admin-summary > article > div > strong,
+.role-admin-content .admin-stats-grid strong,
+.role-admin-content .admin-stat-card strong {
+  font-size: 1.55rem !important;
+  line-height: 1.15 !important;
+}
+
+.role-admin-content .teacher-class-assignment__row strong,
+.role-admin-content .teacher-class-assignment__row span,
+.role-admin-content .academic-grade-card strong,
+.role-admin-content .academic-grade-card small,
+.role-admin-content .admin-directory-card strong,
+.role-admin-content .admin-directory-card small {
+  line-height: 1.45 !important;
+}
+
+.role-admin-content .teacher-class-assignment__row strong,
+.role-admin-content .academic-grade-card strong,
+.role-admin-content .admin-directory-card strong { font-size: 14px !important; }
+.role-admin-content .teacher-class-assignment__row span,
+.role-admin-content .academic-grade-card small,
+.role-admin-content .admin-directory-card small { font-size: 12.75px !important; }
+
+.role-sidebar.role-admin .sidebar-identity strong { font-size: 15px; }
+.role-sidebar.role-admin .sidebar-identity small { font-size: 12.5px; }
+.role-sidebar.role-admin .sidebar-heading { font-size: 13px; }
+.role-sidebar.role-admin .menu-item { font-size: 15px; line-height: 1.35; min-height: 48px; }
+.role-sidebar.role-admin .sidebar-footer-note strong { font-size: 13px; }
+.role-sidebar.role-admin .sidebar-footer-note span { font-size: 11.5px; line-height: 1.5; }
+
+.role-admin-topbar .lms-global-search input,
+.role-admin-topbar .lms-profile-chip strong,
+.role-admin-topbar .lms-signout-button { font-size: 14px; }
+.role-admin-topbar .lms-profile-chip small { font-size: 12.5px; }
+
+@media (max-width: 760px) {
+  .role-admin-content { --admin-type: 15px; --admin-type-control: 16px; }
+  .role-admin-content h1 { font-size: clamp(1.75rem, 8vw, 2.2rem) !important; }
+  .role-admin-content h2 { font-size: 1.25rem !important; }
+  .role-admin-content p, .role-admin-content li { font-size: 14.5px !important; }
+  .role-admin-content input, .role-admin-content select, .role-admin-content textarea { font-size: 16px !important; }
+}

@@ -1,0 +1,345 @@
+/* Light teacher navigation matched to the approved administrator sidebar. */
+.role-sidebar.role-teacher {
+  --teacher-sidebar-blue: #063bbd;
+  --teacher-sidebar-bright: #1f6ff2;
+  --teacher-sidebar-navy: #092a73;
+  --teacher-sidebar-gold: #f2b705;
+  width: 304px;
+  min-height: calc(100vh - 76px);
+  padding: 18px 16px 16px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-right: 1px solid #d7e3f7;
+  background:
+    radial-gradient(circle at 12% 2%, rgba(78, 150, 255, .14), transparent 18rem),
+    linear-gradient(180deg, #ffffff 0%, #f7fbff 56%, #eef6ff 100%);
+  box-shadow: 10px 0 32px rgba(28, 72, 145, .08);
+  transition: width .24s ease, padding .24s ease;
+}
+
+.role-sidebar.role-teacher::-webkit-scrollbar { width: 5px; }
+.role-sidebar.role-teacher::-webkit-scrollbar-thumb { border-radius: 999px; background: #c8d9f3; }
+
+.teacher-sidebar-identity {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  min-height: auto;
+  margin: 0 0 12px;
+  padding: 15px 42px 16px;
+  border: 1px solid #d8e5f7;
+  border-radius: 18px;
+  color: var(--teacher-sidebar-navy);
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 12px 30px rgba(26, 70, 142, .08);
+}
+
+.teacher-sidebar-identity::after,
+.teacher-sidebar-footer::before {
+  width: 82%;
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, var(--teacher-sidebar-gold), transparent);
+}
+
+.teacher-sidebar-identity::after { position: absolute; right: 9%; bottom: -8px; }
+
+.teacher-sidebar-identity > img {
+  width: 68px;
+  height: 68px;
+  flex: 0 0 auto;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+  box-shadow: 0 0 0 1px #bdd4fa, 0 8px 20px rgba(4, 48, 145, .15);
+}
+
+.teacher-sidebar-identity-copy {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.role-sidebar.role-teacher .teacher-sidebar-identity-copy strong {
+  overflow: visible;
+  color: #092c76;
+  font-size: 16px;
+  font-weight: 850;
+  line-height: 1.25;
+  letter-spacing: -.015em;
+  white-space: nowrap;
+}
+
+.role-sidebar.role-teacher .teacher-sidebar-identity-copy small {
+  max-width: 188px;
+  overflow: hidden;
+  color: #62759a;
+  font-size: 12px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.teacher-sidebar-toggle,
+.teacher-sidebar-mobile-close {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  border: 1px solid #cbdcf5;
+  border-radius: 12px;
+  color: var(--teacher-sidebar-blue);
+  background: #fff;
+  box-shadow: 0 7px 18px rgba(21, 65, 139, .12);
+}
+
+.teacher-sidebar-toggle { position: absolute; top: 12px; right: 10px; margin: 0; }
+
+.teacher-sidebar-toggle:hover,
+.teacher-sidebar-mobile-close:hover { border-color: #94b9f4; color: #063bbd; background: #edf5ff; }
+
+.teacher-sidebar-mobile-close {
+  display: none;
+  position: absolute;
+  top: 18px;
+  right: 14px;
+  z-index: 3;
+}
+
+.teacher-sidebar-class {
+  display: grid;
+  gap: 7px;
+  margin: 20px 3px 10px;
+  padding: 13px;
+  border: 1px solid #dce8f8;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .84);
+}
+
+.role-sidebar.role-teacher .teacher-sidebar-class label {
+  color: #235fbe;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.3;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.role-sidebar.role-teacher .teacher-sidebar-class select {
+  width: 100%;
+  min-height: 47px;
+  padding: 0 36px 0 12px;
+  border: 1px solid #bdd2ef;
+  border-radius: 11px;
+  outline: none;
+  color: #113b7b !important;
+  background: #f7fbff;
+  font-size: 13px;
+  font-weight: 750;
+  color-scheme: light;
+}
+
+.teacher-sidebar-class select:focus { border-color: #5a91e6; box-shadow: 0 0 0 3px rgba(28, 102, 222, .12); }
+
+.teacher-sidebar-class > span {
+  width: 52px;
+  min-height: 52px;
+  display: grid;
+  place-items: center;
+  padding: 4px;
+  border: 1px solid #bdd2ef;
+  border-radius: 12px;
+  color: #17499e;
+  background: #fff;
+  font-size: 10px;
+  font-weight: 850;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.role-sidebar.role-teacher > .sidebar-heading { display: none; }
+.role-sidebar.role-teacher nav { display: grid; gap: 3px; padding-top: 5px; }
+.role-sidebar.role-teacher .sidebar-menu-row { display: grid; gap: 5px; }
+
+.role-sidebar.role-teacher .teacher-sidebar-group {
+  margin: 15px 11px 4px;
+  color: #3269c4 !important;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: .11em;
+}
+
+.role-sidebar.role-teacher .menu-item {
+  min-height: 50px;
+  margin: 0;
+  padding: 11px 13px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  color: #173b79;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.35;
+  box-shadow: none;
+  transition: color .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+
+.role-sidebar.role-teacher .menu-item svg { flex: 0 0 auto; color: #1556c5; }
+
+.role-sidebar.role-teacher .menu-item:hover {
+  transform: none;
+  border-color: #d3e2f7;
+  color: #072c75;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 7px 17px rgba(27, 75, 152, .07);
+}
+
+.role-sidebar.role-teacher .menu-item.active {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(6, 59, 189, .1);
+  color: #fff;
+  background: linear-gradient(100deg, #073ec8 0%, #1767eb 64%, #2e7bf1 100%);
+  box-shadow: 0 12px 24px rgba(7, 68, 190, .22);
+}
+
+.role-sidebar.role-teacher .menu-item.active::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  content: "";
+  background: var(--teacher-sidebar-gold);
+}
+
+.role-sidebar.role-teacher .menu-item.active svg { color: #fff; }
+
+.teacher-sidebar-footer {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  margin-top: auto;
+  padding: 23px 3px 0;
+}
+
+.teacher-sidebar-footer::before { position: absolute; top: 11px; left: 9%; }
+
+.teacher-sidebar-inspiration {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px 8px;
+  border: 1px solid #dce8f8;
+  border-radius: 13px;
+  color: #17499e;
+  background: rgba(255, 255, 255, .8);
+}
+
+.teacher-sidebar-inspiration > img {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.teacher-sidebar-inspiration div { min-width: 0; display: grid; gap: 2px; }
+
+.role-sidebar.role-teacher .teacher-sidebar-inspiration strong {
+  overflow: hidden;
+  color: #0b337d;
+  font-size: 12.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.role-sidebar.role-teacher .teacher-sidebar-inspiration span {
+  color: #66789a;
+  font-size: 10px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.teacher-sidebar-inspiration b { color: var(--teacher-sidebar-gold); }
+
+.teacher-sidebar-footer > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid #d5e2f4;
+  border-radius: 12px;
+  color: #17499e;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.teacher-sidebar-footer > button svg { color: #1556c5; }
+.teacher-sidebar-footer > button:hover { border-color: #a9c7f3; color: #063bbd; background: #f4f8ff; }
+.teacher-sidebar-footer > button:disabled { cursor: wait; opacity: .65; }
+
+.role-sidebar.role-teacher.teacher-sidebar-collapsed { width: 92px; padding-right: 14px; padding-left: 14px; }
+.teacher-sidebar-collapsed .teacher-sidebar-identity { gap: 11px; padding: 12px 6px; }
+.teacher-sidebar-collapsed .teacher-sidebar-identity > img { width: 52px; height: 52px; }
+.teacher-sidebar-collapsed .teacher-sidebar-identity-copy,
+.teacher-sidebar-collapsed .teacher-sidebar-group,
+.teacher-sidebar-collapsed .menu-item span,
+.teacher-sidebar-collapsed .teacher-sidebar-inspiration div,
+.teacher-sidebar-collapsed .teacher-sidebar-footer > button span { display: none; }
+.teacher-sidebar-collapsed .teacher-sidebar-toggle { position: static; }
+.teacher-sidebar-collapsed .teacher-sidebar-class { justify-items: center; margin: 14px 0 10px; padding: 8px 4px; }
+.teacher-sidebar-collapsed .teacher-sidebar-class label,
+.teacher-sidebar-collapsed .teacher-sidebar-class select { display: none; }
+.teacher-sidebar-collapsed nav { justify-items: center; }
+.role-sidebar.role-teacher.teacher-sidebar-collapsed .menu-item { justify-content: center; width: 56px; height: 56px; padding: 0; }
+.teacher-sidebar-collapsed .teacher-sidebar-inspiration { justify-content: center; padding: 8px; }
+.teacher-sidebar-collapsed .teacher-sidebar-inspiration > img { width: 40px; height: 40px; }
+.teacher-sidebar-collapsed .teacher-sidebar-footer > button { padding: 0; }
+
+@media (max-width: 900px) {
+  .role-sidebar.role-teacher,
+  .role-sidebar.role-teacher.teacher-sidebar-collapsed {
+    left: -326px;
+    width: min(304px, 90vw);
+    height: calc(100vh - 76px);
+    padding: 18px 16px 16px;
+  }
+
+  .role-sidebar.role-teacher.open { left: 0; }
+  .role-sidebar.role-teacher .teacher-sidebar-toggle { display: none; }
+  .role-sidebar.role-teacher .teacher-sidebar-mobile-close { display: grid; }
+  .role-sidebar.role-teacher .teacher-sidebar-identity { padding-right: 50px; padding-left: 20px; }
+  .role-sidebar.role-teacher .teacher-sidebar-identity-copy,
+  .role-sidebar.role-teacher .teacher-sidebar-group,
+  .role-sidebar.role-teacher .menu-item span,
+  .role-sidebar.role-teacher .teacher-sidebar-inspiration div,
+  .role-sidebar.role-teacher .teacher-sidebar-footer > button span { display: grid; }
+  .role-sidebar.role-teacher .teacher-sidebar-class { justify-items: stretch; margin: 20px 3px 10px; padding: 13px; }
+  .role-sidebar.role-teacher .teacher-sidebar-class > span { display: none; }
+  .role-sidebar.role-teacher .teacher-sidebar-class label,
+  .role-sidebar.role-teacher .teacher-sidebar-class select { display: block; }
+  .role-sidebar.role-teacher nav { justify-items: stretch; }
+  .role-sidebar.role-teacher.teacher-sidebar-collapsed .menu-item { justify-content: flex-start; width: auto; height: auto; padding: 11px 13px; }
+  .role-sidebar.role-teacher .teacher-sidebar-inspiration { justify-content: flex-start; padding: 10px 8px; }
+  .role-sidebar.role-teacher .teacher-sidebar-inspiration > img { width: 42px; height: 42px; }
+  .role-sidebar.role-teacher .teacher-sidebar-footer > button { padding: 0 12px; }
+}
+
+@media (max-width: 560px) {
+  .role-sidebar.role-teacher,
+  .role-sidebar.role-teacher.teacher-sidebar-collapsed { top: 68px; height: calc(100vh - 68px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .role-sidebar.role-teacher { transition: none; }
+}

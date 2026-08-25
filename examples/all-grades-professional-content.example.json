@@ -1,0 +1,270 @@
+{
+  "lessons": {
+    "grade3-number-families": {
+      "teacherId": "REPLACE_WITH_TEACHER_UID",
+      "title": "Number Families: Addition and Subtraction",
+      "grade": "Grade 3",
+      "subject": "Mathematics",
+      "description": "Use related number facts to solve addition and subtraction problems.",
+      "learningObjectives": [
+        "Identify related addition and subtraction facts.",
+        "Use a fact family to check an answer.",
+        "Explain how addition and subtraction are connected."
+      ],
+      "discussion": [
+        "A fact family is a group of number sentences that use the same three numbers.",
+        "For the numbers 6, 4, and 10, two addition facts are 6 + 4 = 10 and 4 + 6 = 10.",
+        "The related subtraction facts are 10 - 6 = 4 and 10 - 4 = 6."
+      ],
+      "examples": [
+        "Use 3, 5, and 8: 3 + 5 = 8, 5 + 3 = 8, 8 - 3 = 5, and 8 - 5 = 3.",
+        "Check 12 - 7 = 5 by adding 7 + 5. The sum is 12, so the subtraction answer is correct."
+      ],
+      "activities": [
+        {
+          "title": "Build a fact-family triangle",
+          "instructions": "Write the total at the top and the two parts at the bottom, then make four related equations."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Which equation belongs to the fact family 5, 7, and 12?",
+          "choices": ["5 + 7 = 12", "12 + 5 = 7", "7 - 5 = 12", "5 + 12 = 7"],
+          "answer": "5 + 7 = 12",
+          "rationale": "The two parts, 5 and 7, combine to make the total 12."
+        },
+        {
+          "question": "What number completes 15 - 9 = ?",
+          "choices": ["4", "5", "6", "7"],
+          "answer": "6",
+          "rationale": "Because 9 + 6 = 15, 15 - 9 = 6."
+        },
+        {
+          "question": "Which addition fact checks 14 - 8 = 6?",
+          "choices": ["8 + 6 = 14", "14 + 6 = 8", "8 - 6 = 14", "6 + 14 = 8"],
+          "answer": "8 + 6 = 14",
+          "rationale": "Add the difference to the number subtracted to recover the total."
+        }
+      ],
+      "gameId": "grade3-math-quest",
+      "estimatedMinutes": 20,
+      "difficulty": "Beginner",
+      "status": "published",
+      "createdAt": 1787520000000,
+      "updatedAt": 1787520000000
+    },
+    "grade4-context-clues": {
+      "teacherId": "REPLACE_WITH_TEACHER_UID",
+      "title": "Context Clue Detectives",
+      "grade": "Grade 4",
+      "subject": "Reading Comprehension",
+      "description": "Use nearby words, examples, and contrasts to infer unfamiliar word meanings.",
+      "learningObjectives": [
+        "Identify clues surrounding an unfamiliar word.",
+        "Infer a likely word meaning from a sentence.",
+        "Explain which clue supports an inference."
+      ],
+      "discussion": [
+        "Context clues are hints found before or after an unfamiliar word.",
+        "A definition clue directly explains the word, while an example clue lists related examples.",
+        "A contrast clue uses words such as but, unlike, or however to show an opposite idea."
+      ],
+      "examples": [
+        "The arid field was dry and dusty. The words dry and dusty show that arid means very dry.",
+        "Unlike his timid brother, Carlo spoke confidently. The contrast suggests that timid means shy or fearful."
+      ],
+      "activities": [
+        {
+          "title": "Clue highlighter",
+          "instructions": "Underline the unfamiliar word, circle the clue, and write a meaning supported by the sentence."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "The kitten was famished, so it quickly ate all its food. What does famished mean?",
+          "choices": ["very hungry", "very sleepy", "very clean", "very noisy"],
+          "answer": "very hungry",
+          "rationale": "Eating all the food quickly is evidence that the kitten was very hungry."
+        },
+        {
+          "question": "Which word often signals a contrast clue?",
+          "choices": ["however", "first", "because", "also"],
+          "answer": "however",
+          "rationale": "However introduces an idea that contrasts with an earlier idea."
+        },
+        {
+          "question": "What should a reader do after making an inferred meaning?",
+          "choices": ["Check whether it makes sense in the sentence", "Ignore the sentence", "Choose the longest word", "Copy a random meaning"],
+          "answer": "Check whether it makes sense in the sentence",
+          "rationale": "A good inferred meaning must fit the complete sentence."
+        }
+      ],
+      "gameId": "grade4-word-detective",
+      "estimatedMinutes": 25,
+      "difficulty": "Developing",
+      "status": "published",
+      "createdAt": 1787520100000,
+      "updatedAt": 1787520100000
+    },
+    "grade5-fraction-strategies": {
+      "teacherId": "REPLACE_WITH_TEACHER_UID",
+      "title": "Adding Fractions with Like Denominators",
+      "grade": "Grade 5",
+      "subject": "Mathematics",
+      "description": "Represent and add fractions that have the same denominator.",
+      "learningObjectives": [
+        "Explain what the numerator and denominator represent.",
+        "Add fractions with like denominators.",
+        "Simplify a fraction when possible."
+      ],
+      "discussion": [
+        "Fractions with like denominators are divided into the same size parts.",
+        "When denominators are the same, add the numerators and keep the common denominator.",
+        "After adding, check whether the result can be simplified."
+      ],
+      "examples": [
+        "2/8 + 3/8 = 5/8 because the eighth-size parts stay the same and 2 + 3 = 5.",
+        "3/10 + 5/10 = 8/10, which simplifies to 4/5."
+      ],
+      "activities": [
+        {
+          "title": "Fraction strip comparison",
+          "instructions": "Shade two like-denominator fractions, combine the shaded parts, and write the sum."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "What is 3/7 + 2/7?",
+          "choices": ["5/7", "5/14", "1/7", "6/7"],
+          "answer": "5/7",
+          "rationale": "Add the numerators and keep the common denominator: 3 + 2 = 5."
+        },
+        {
+          "question": "Why does the denominator stay the same?",
+          "choices": ["The parts remain the same size", "The numerator is larger", "Every sum has denominator 10", "Denominators are ignored"],
+          "answer": "The parts remain the same size",
+          "rationale": "The denominator identifies the size of each equal part."
+        },
+        {
+          "question": "Which is the simplified form of 6/8?",
+          "choices": ["3/4", "2/4", "6/4", "1/8"],
+          "answer": "3/4",
+          "rationale": "Divide both numerator and denominator by 2."
+        }
+      ],
+      "gameId": "grade5-fraction-expedition",
+      "estimatedMinutes": 30,
+      "difficulty": "Intermediate",
+      "status": "published",
+      "createdAt": 1787520200000,
+      "updatedAt": 1787520200000
+    },
+    "grade6-evidence-reasoning": {
+      "teacherId": "REPLACE_WITH_TEACHER_UID",
+      "title": "Claims, Evidence, and Reasoning",
+      "grade": "Grade 6",
+      "subject": "Science",
+      "description": "Use observations and reliable data to support a scientific explanation.",
+      "learningObjectives": [
+        "Distinguish a claim from evidence.",
+        "Select evidence that supports a claim.",
+        "Explain how evidence justifies a conclusion."
+      ],
+      "discussion": [
+        "A claim is a statement that answers a scientific question.",
+        "Evidence consists of observations, measurements, or results that support the claim.",
+        "Reasoning explains why the evidence is scientifically connected to the claim."
+      ],
+      "examples": [
+        "Claim: Plants receiving more light grew taller. Evidence: Their average height was 18 cm compared with 11 cm for the low-light group.",
+        "Reasoning: Light supports photosynthesis, which helps plants make food needed for growth."
+      ],
+      "activities": [
+        {
+          "title": "CER response",
+          "instructions": "Read a small data table, write one claim, cite two measurements, and explain the scientific connection."
+        }
+      ],
+      "quiz": [
+        {
+          "question": "Which is evidence?",
+          "choices": ["The measured temperature rose from 25°C to 31°C", "I think heat is interesting", "The experiment was fun", "The chart looks colorful"],
+          "answer": "The measured temperature rose from 25°C to 31°C",
+          "rationale": "A recorded measurement is evidence."
+        },
+        {
+          "question": "What does reasoning do?",
+          "choices": ["Connects evidence to the claim", "Repeats the title", "Removes the data", "Changes the question"],
+          "answer": "Connects evidence to the claim",
+          "rationale": "Reasoning explains why the evidence supports the claim."
+        },
+        {
+          "question": "Which source is strongest for a science claim?",
+          "choices": ["Repeated measurements from a fair test", "An anonymous opinion", "A product advertisement", "One unsupported guess"],
+          "answer": "Repeated measurements from a fair test",
+          "rationale": "Repeated measurements from a controlled test are reliable evidence."
+        }
+      ],
+      "gameId": "grade6-science-strategy",
+      "estimatedMinutes": 35,
+      "difficulty": "Advanced",
+      "status": "published",
+      "createdAt": 1787520300000,
+      "updatedAt": 1787520300000
+    }
+  },
+  "games": {
+    "grade3-math-quest": {
+      "teacherId": "REPLACE_WITH_TEACHER_UID",
+      "title": "Grade 3 Math Quest",
+      "grade": "Grade 3",
+      "subject": "Mathematics",
+      "description": "Solve addition, subtraction, and multiplication challenges through timed levels.",
+      "competency": "Performs basic operations and checks related number facts.",
+      "estimatedMinutes": 10,
+      "difficulty": "Beginner",
+      "status": "published",
+      "createdAt": 1787521000000,
+      "updatedAt": 1787521000000
+    },
+    "grade4-word-detective": {
+      "teacherId": "REPLACE_WITH_TEACHER_UID",
+      "title": "Word Detective Challenge",
+      "grade": "Grade 4",
+      "subject": "Reading Comprehension",
+      "description": "Infer word meanings using definitions, examples, and contrast clues.",
+      "competency": "Uses context clues to determine word meaning.",
+      "estimatedMinutes": 12,
+      "difficulty": "Developing",
+      "status": "published",
+      "createdAt": 1787521100000,
+      "updatedAt": 1787521100000
+    },
+    "grade5-fraction-expedition": {
+      "teacherId": "REPLACE_WITH_TEACHER_UID",
+      "title": "Fraction Expedition",
+      "grade": "Grade 5",
+      "subject": "Mathematics",
+      "description": "Add fractions and decimals while collecting stars and maintaining a streak.",
+      "competency": "Adds like fractions and applies decimal place value.",
+      "estimatedMinutes": 12,
+      "difficulty": "Intermediate",
+      "status": "published",
+      "createdAt": 1787521200000,
+      "updatedAt": 1787521200000
+    },
+    "grade6-science-strategy": {
+      "teacherId": "REPLACE_WITH_TEACHER_UID",
+      "title": "Science Evidence Strategy",
+      "grade": "Grade 6",
+      "subject": "Science",
+      "description": "Choose reliable evidence and complete advanced science reasoning challenges.",
+      "competency": "Uses evidence and reasoning to support scientific claims.",
+      "estimatedMinutes": 15,
+      "difficulty": "Advanced",
+      "status": "published",
+      "createdAt": 1787521300000,
+      "updatedAt": 1787521300000
+    }
+  }
+}

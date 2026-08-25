@@ -1,0 +1,82 @@
+.student-game-audio-ready {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 12px 0;
+  padding: 12px 13px;
+  border: 1px solid #cce8dc;
+  border-radius: 13px;
+  color: #0d8760;
+  background: linear-gradient(135deg, #effcf7, #f5f9ff);
+}
+
+.student-game-audio-ready > svg {
+  flex: 0 0 auto;
+}
+
+.student-game-audio-ready > div {
+  display: grid;
+  gap: 3px;
+}
+
+.student-game-audio-ready strong {
+  font-size: 11px;
+}
+
+.student-game-audio-ready span {
+  color: #5f756e;
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.student-game-audio-ready.is-camera-audio {
+  margin: 12px 0 0;
+  border-color: #d6dcf4;
+  color: #485cc9;
+  background: linear-gradient(135deg, #f4f6ff, #f5fbff);
+}
+
+.teacher-camera-level-focus {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: -3px 0 14px;
+  padding: 12px 13px;
+  border: 1px solid #d7e5fb;
+  border-radius: 13px;
+  color: #2765c9;
+  background: linear-gradient(135deg, #f4f8ff, #fbf9ff);
+}
+
+.teacher-camera-level-focus > svg {
+  flex: 0 0 auto;
+}
+
+.teacher-camera-level-focus > div {
+  display: grid;
+  gap: 3px;
+}
+
+.teacher-camera-level-focus span {
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .09em;
+}
+
+.teacher-camera-level-focus strong {
+  color: #263754;
+  font-size: 10.5px;
+}
+
+.teacher-camera-level-focus small {
+  color: #718098;
+  font-size: 8.5px;
+  line-height: 1.45;
+}
+
+@media (max-width: 620px) {
+  .student-game-audio-ready,
+  .teacher-camera-level-focus {
+    padding: 11px;
+  }
+}

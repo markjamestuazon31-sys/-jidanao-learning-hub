@@ -1,0 +1,892 @@
+/* Public-home presentation refresh only. Data, authentication, and routes are unchanged. */
+.home-v2--school {
+  --school-navy: #102b73;
+  --school-deep: #0b3f98;
+  --school-blue: #2265ed;
+  --school-sky: #2599f5;
+  --school-yellow: #ffd342;
+  --school-pale: #edf5ff;
+  --school-line: #bfd8ff;
+  --school-text: #112a5b;
+  --school-muted: #5c6f91;
+  --school-shadow: 0 18px 42px rgba(16, 43, 115, 0.11);
+  color: var(--school-text);
+}
+
+.home-v2--school :where(button, a) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hero */
+.home-v2--school .home-hero-v2 {
+  min-height: 540px;
+  grid-template-columns: minmax(0, 1fr) minmax(500px, 0.92fr);
+  border-color: rgba(188, 220, 255, 0.5);
+  background:
+    radial-gradient(circle at 84% 18%, rgba(96, 196, 255, 0.38), transparent 25rem),
+    radial-gradient(circle at 45% 115%, rgba(37, 153, 245, 0.29), transparent 30rem),
+    linear-gradient(124deg, #082f82 0%, #0d4caf 42%, #1974df 76%, #2599f5 100%);
+  padding: 56px 52px 50px;
+  box-shadow: 0 28px 66px rgba(13, 63, 152, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.home-v2--school .home-hero-v2::before,
+.home-v2--school .home-hero-v2::after {
+  border-color: rgba(191, 225, 255, 0.14);
+}
+
+.home-v2--school .home-hero-v2__trust {
+  border-color: rgba(255, 255, 255, 0.28);
+  background: rgba(7, 43, 115, 0.32);
+  color: #fff;
+}
+
+.home-v2--school .home-hero-v2__eyebrow {
+  color: #cfe7ff;
+}
+
+.home-v2--school .home-hero-v2 h1 {
+  max-width: 760px;
+  font-size: clamp(47px, 4.45vw, 72px);
+  line-height: 1.01;
+}
+
+.home-v2--school .home-hero-v2 h1 span {
+  background: linear-gradient(90deg, #fff071, var(--school-yellow));
+  background-clip: text;
+}
+
+.home-v2--school .home-hero-v2__copy > p {
+  color: #eaf5ff;
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.7;
+}
+
+.home-v2--school .home-hero-v2__primary {
+  color: var(--school-deep);
+  box-shadow: 0 12px 26px rgba(4, 37, 102, 0.25);
+}
+
+.home-v2--school .home-hero-v2__primary svg:first-child {
+  color: var(--school-blue);
+}
+
+.home-v2--school .home-hero-v2__secondary {
+  border-color: rgba(255, 255, 255, 0.55);
+  background: rgba(7, 43, 115, 0.24);
+}
+
+.home-v2--school .home-hero-v2__highlights span {
+  color: #e6f3ff;
+}
+
+.home-v2--school .home-hero-v2__highlights span:nth-child(2) svg {
+  color: #8ee0ff;
+}
+
+.home-v2--school .home-hero-v2__review-note {
+  border-color: rgba(191, 216, 255, 0.9);
+  color: #445b83;
+  box-shadow: 0 14px 30px rgba(9, 51, 127, 0.18);
+}
+
+.home-v2--school .home-hero-v2__review-note > span {
+  background: #e7f2ff;
+  color: var(--school-blue);
+}
+
+.home-v2--school .home-hero-artwork {
+  min-height: 420px;
+}
+
+.home-v2--school .home-hero-artwork__halo {
+  right: -1%;
+  bottom: -8%;
+  width: 87%;
+  border-color: rgba(211, 236, 255, 0.24);
+  background: radial-gradient(circle, rgba(197, 231, 255, 0.25), rgba(91, 185, 255, 0.1) 52%, transparent 72%);
+}
+
+.home-v2--school .home-students-illustration--professional {
+  right: -54px;
+  bottom: -88px;
+  width: min(720px, 118%);
+  max-width: none;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 24px 28px rgba(3, 35, 94, 0.25));
+}
+
+.home-v2--school .home-hero-platform-card {
+  top: 12px;
+  right: 8px;
+  border-color: rgba(205, 231, 255, 0.3);
+  background: rgba(6, 47, 124, 0.62);
+  box-shadow: 0 18px 38px rgba(3, 35, 94, 0.22);
+}
+
+.home-v2--school .home-hero-float-card {
+  border-color: rgba(255, 255, 255, 0.34);
+  box-shadow: 0 16px 32px rgba(3, 35, 94, 0.24);
+}
+
+.home-v2--school .home-hero-float-card--trophy,
+.home-v2--school .home-hero-float-card--book {
+  background: linear-gradient(145deg, rgba(19, 91, 210, 0.96), rgba(8, 59, 151, 0.96));
+}
+
+.home-v2--school .home-hero-float-card--trophy {
+  color: var(--school-yellow);
+}
+
+.home-v2--school .home-hero-float-card--game {
+  background: linear-gradient(145deg, rgba(37, 153, 245, 0.97), rgba(34, 101, 237, 0.97));
+}
+
+.home-v2--school .home-hero-float-card--mini {
+  background: linear-gradient(145deg, #ffe56d, #f5b921);
+  color: var(--school-navy);
+}
+
+/* Grade selection */
+.home-v2--school .home-grade-filter {
+  border-color: var(--school-line);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(237, 245, 255, 0.92));
+  box-shadow: 0 10px 28px rgba(16, 43, 115, 0.07);
+}
+
+.home-v2--school .home-grade-filter__title,
+.home-v2--school .home-grade-filter__title h2 {
+  color: var(--school-navy);
+}
+
+.home-v2--school .home-grade-chip {
+  border-color: #cfe0f8;
+  color: #3d5378;
+}
+
+.home-v2--school .home-grade-chip > span {
+  background: var(--school-sky);
+}
+
+.home-v2--school .home-grade-chip:hover {
+  border-color: #7fb4f7;
+  color: var(--school-deep);
+}
+
+.home-v2--school .home-grade-chip.is-selected {
+  background: linear-gradient(135deg, var(--school-sky), var(--school-blue));
+  box-shadow: 0 8px 19px rgba(34, 101, 237, 0.22);
+}
+
+.home-v2--school .home-grade-chip.is-selected > span {
+  background: var(--school-yellow);
+  box-shadow: 0 0 0 3px rgba(255, 211, 66, 0.18);
+}
+
+/* Games */
+.home-v2--school .home-game-showcase {
+  border-color: #b9d5fb;
+  background:
+    radial-gradient(circle at 94% 2%, rgba(37, 153, 245, 0.16), transparent 27rem),
+    radial-gradient(circle at 2% 96%, rgba(255, 211, 66, 0.13), transparent 22rem),
+    linear-gradient(145deg, #eaf4ff 0%, #f7fbff 55%, #eef6ff 100%);
+  box-shadow: var(--school-shadow);
+}
+
+.home-v2--school .home-game-showcase::before {
+  border-color: rgba(34, 101, 237, 0.1);
+}
+
+.home-v2--school .home-game-showcase__heading-icon {
+  border-color: rgba(255, 255, 255, 0.52);
+  background: linear-gradient(145deg, var(--school-sky), var(--school-blue));
+  box-shadow: 0 12px 26px rgba(34, 101, 237, 0.23);
+}
+
+.home-v2--school .home-game-showcase .home-section-v2__eyebrow,
+.home-v2--school .home-section-v2__eyebrow {
+  color: #2765bf;
+}
+
+.home-v2--school .home-game-showcase__heading h2 {
+  color: var(--school-navy);
+}
+
+.home-v2--school .home-game-showcase__heading p,
+.home-v2--school .home-game-showcase__access-note p {
+  color: var(--school-muted);
+}
+
+.home-v2--school .home-game-showcase__count {
+  border-color: #c7dcf8;
+  background: #fff;
+  color: #496184;
+}
+
+.home-v2--school .home-game-showcase__count > span {
+  background: var(--school-blue);
+  color: #fff;
+}
+
+.home-v2--school .home-game-showcase__access-note {
+  border-color: #c7dcf8;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.home-v2--school .home-game-showcase__access-icon {
+  background: #e4f2ff;
+  color: var(--school-blue);
+}
+
+.home-v2--school .home-game-showcase__access-note strong {
+  color: var(--school-navy);
+}
+
+.home-v2--school .home-game-showcase__access-note > a {
+  background: var(--school-navy);
+  color: #fff;
+}
+
+.home-v2--school .home-game-card {
+  border-color: #bed7f8;
+  box-shadow: 0 14px 32px rgba(16, 43, 115, 0.11);
+}
+
+.home-v2--school .home-game-card:hover {
+  border-color: #75aef4;
+  box-shadow: 0 20px 42px rgba(16, 43, 115, 0.17);
+}
+
+.home-v2--school .home-game-card--math .home-game-card__visual {
+  background: linear-gradient(135deg, #0e55c4, #2276e6 58%, #2fa7f5);
+}
+
+.home-v2--school .home-game-card--english .home-game-card__visual,
+.home-v2--school .home-game-card--filipino .home-game-card__visual {
+  background: linear-gradient(135deg, #103c8c, #1c62ce 56%, #338fe9);
+}
+
+.home-v2--school .home-game-card--science .home-game-card__visual {
+  background: linear-gradient(135deg, #0b6f9d, #168fc7 56%, #2599f5);
+}
+
+.home-v2--school .home-game-card--general .home-game-card__visual {
+  background: linear-gradient(135deg, var(--school-navy), #155bc4 58%, var(--school-blue));
+}
+
+.home-v2--school .home-game-card__art-main {
+  border-radius: 21px;
+  background: rgba(255, 255, 255, 0.18);
+  transform: none;
+}
+
+.home-v2--school .home-game-card__art-companion {
+  background: rgba(8, 47, 130, 0.5);
+  transform: none;
+}
+
+.home-v2--school .home-game-card__art-play,
+.home-v2--school .home-game-card__title-row > div > span,
+.home-v2--school .home-game-card__facts svg {
+  color: var(--school-blue);
+}
+
+.home-v2--school .home-game-card__title-row h3 {
+  color: var(--school-text);
+}
+
+.home-v2--school .home-game-card__award {
+  background: #fff4c7;
+  color: #b87800;
+}
+
+.home-v2--school .home-game-card__facts span {
+  border-color: #d9e6f7;
+  background: #f5f9ff;
+}
+
+.home-v2--school .home-game-card__footer button {
+  background: linear-gradient(135deg, var(--school-sky), var(--school-blue));
+  box-shadow: 0 9px 20px rgba(34, 101, 237, 0.2);
+}
+
+.home-v2--school .home-game-card__footer button:hover:not(:disabled) {
+  box-shadow: 0 13px 25px rgba(34, 101, 237, 0.28);
+}
+
+/* Lessons and supporting sections */
+.home-v2--school .home-section-v2__heading h2,
+.home-v2--school .home-process h2,
+.home-v2--school .home-help-panel h2 {
+  color: var(--school-text);
+}
+
+.home-v2--school .home-section-v2__icon {
+  border-radius: 12px;
+}
+
+.home-v2--school .home-section-v2__icon--yellow,
+.home-v2--school .home-section-v2__icon--pink {
+  background: #e4f2ff;
+  color: var(--school-blue);
+}
+
+.home-v2--school .home-section-v2__view-all {
+  color: var(--school-blue);
+}
+
+.home-v2--school .home-feature-card {
+  border-color: #c8dcf6;
+  box-shadow: 0 12px 28px rgba(16, 43, 115, 0.08);
+}
+
+.home-v2--school .home-feature-card:hover {
+  border-color: #7eb4f5;
+  box-shadow: 0 18px 36px rgba(16, 43, 115, 0.14);
+}
+
+.home-v2--school :is(
+  .home-feature-card__cover--math,
+  .home-feature-card__cover--reading,
+  .home-feature-card__cover--language,
+  .home-feature-card__cover--science,
+  .home-feature-card__cover--filipino,
+  .home-feature-card__cover--game,
+  .home-feature-card__cover.is-game,
+  .home-feature-card__cover--general
+) {
+  background: linear-gradient(135deg, #e1f0ff, #c8e6ff 56%, #dbe9ff);
+  color: var(--school-blue);
+}
+
+.home-v2--school .home-feature-card__type,
+.home-v2--school .home-feature-card__cover.is-game .home-feature-card__type {
+  background: var(--school-blue);
+}
+
+.home-v2--school .home-feature-card__art-icon,
+.home-v2--school .home-feature-card__cover-icon {
+  border-color: rgba(255, 255, 255, 0.85);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.home-v2--school .home-feature-card__action {
+  background: #e8f2ff;
+  color: var(--school-blue);
+}
+
+.home-v2--school .home-feature-card__action:hover {
+  background: var(--school-blue);
+  color: #fff;
+}
+
+.home-v2--school .home-stat-card {
+  border-color: #c9dcf5;
+  background: linear-gradient(135deg, #edf6ff, #fff);
+  color: var(--school-blue);
+}
+
+.home-v2--school .home-stat-card--orange {
+  background: linear-gradient(135deg, #fff8d7, #fff);
+  color: #b97800;
+}
+
+.home-v2--school .home-stat-card__icon {
+  border: 1px solid #d6e7fa;
+  background: #fff;
+}
+
+.home-v2--school .home-benefit-card {
+  border-color: #cbdff7;
+  box-shadow: 0 10px 25px rgba(16, 43, 115, 0.06);
+}
+
+.home-v2--school :is(
+  .home-benefit-card__icon,
+  .home-benefit-card__icon--purple,
+  .home-benefit-card__icon--green,
+  .home-benefit-card__icon--blue,
+  .home-benefit-card__icon--orange,
+  .home-benefit-card__icon--indigo
+) {
+  border: 1px solid #cfe3fb;
+  background: #e8f3ff;
+  color: var(--school-blue);
+}
+
+.home-v2--school .home-benefit-card h3 {
+  color: var(--school-text);
+}
+
+.home-v2--school .home-process {
+  border-color: #c6dcf7;
+  background: radial-gradient(circle at 7% 20%, rgba(37, 153, 245, 0.12), transparent 18rem), #fff;
+  box-shadow: 0 12px 32px rgba(16, 43, 115, 0.08);
+}
+
+.home-v2--school .home-process__intro .home-section-v2__eyebrow {
+  color: var(--school-blue);
+}
+
+.home-v2--school .home-process-card {
+  border-color: #cfe0f6;
+  background: #f7fbff;
+}
+
+.home-v2--school .home-process-card__number {
+  color: #e0edfc;
+}
+
+.home-v2--school .home-process-card__icon {
+  border: 1px solid #c9e0fa;
+  background: #e8f3ff;
+  color: var(--school-blue);
+}
+
+.home-v2--school .home-help-panel {
+  border: 1px solid rgba(191, 216, 255, 0.35);
+  background: linear-gradient(135deg, var(--school-navy), #155bc4 58%, var(--school-blue));
+  box-shadow: 0 18px 40px rgba(16, 43, 115, 0.2);
+}
+
+.home-v2--school .home-help-panel .home-section-v2__eyebrow {
+  color: #c9e6ff;
+}
+
+.home-v2--school .home-help-panel h2,
+.home-v2--school .home-help-panel p {
+  color: #fff;
+}
+
+.home-v2--school .home-help-panel__actions a:first-child {
+  color: var(--school-navy);
+}
+
+/* Responsive artwork and layout */
+@media (max-width: 1260px) {
+  .home-v2--school .home-hero-v2 {
+    grid-template-columns: minmax(0, 1fr) minmax(410px, 0.82fr);
+  }
+
+  .home-v2--school .home-students-illustration--professional {
+    right: -70px;
+    width: min(650px, 126%);
+  }
+}
+
+@media (max-width: 980px) {
+  .home-v2--school .home-hero-v2 {
+    grid-template-columns: 1fr;
+    padding: 44px 36px 28px;
+  }
+
+  .home-v2--school .home-hero-artwork {
+    min-height: 410px;
+    margin-top: 8px;
+  }
+
+  .home-v2--school .home-students-illustration--professional {
+    right: 50%;
+    bottom: -110px;
+    width: min(710px, 94vw);
+    transform: translateX(50%);
+  }
+
+  .home-v2--school .home-hero-platform-card {
+    right: 2%;
+  }
+}
+
+@media (max-width: 720px) {
+  .home-v2--school .home-hero-v2 {
+    min-height: auto;
+    padding: 34px 22px 22px;
+  }
+
+  .home-v2--school .home-hero-v2 h1 {
+    font-size: clamp(40px, 12vw, 58px);
+  }
+
+  .home-v2--school .home-hero-artwork {
+    min-height: 360px;
+  }
+
+  .home-v2--school .home-students-illustration--professional {
+    bottom: -72px;
+    width: min(610px, 112vw);
+  }
+
+  .home-v2--school .home-hero-platform-card {
+    top: 4px;
+    right: 0;
+    width: min(270px, 72%);
+  }
+
+  .home-v2--school .home-hero-float-card--trophy {
+    top: 76px;
+    left: -6px;
+  }
+
+  .home-v2--school :is(
+    .home-hero-float-card--game,
+    .home-hero-float-card--book,
+    .home-hero-float-card--mini,
+    .home-hero-star
+  ) {
+    display: none;
+  }
+
+  .home-v2--school .home-game-showcase {
+    padding: 22px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .home-v2--school .home-hero-v2 {
+    padding: 28px 17px 18px;
+  }
+
+  .home-v2--school .home-hero-v2__actions > a {
+    width: 100%;
+  }
+
+  .home-v2--school .home-hero-artwork {
+    min-height: 310px;
+  }
+
+  .home-v2--school .home-students-illustration--professional {
+    bottom: -45px;
+    width: 126vw;
+  }
+
+  .home-v2--school .home-hero-platform-card {
+    width: 78%;
+    transform: scale(0.92);
+    transform-origin: top right;
+  }
+
+  .home-v2--school .home-hero-float-card--trophy {
+    min-width: 132px;
+    transform: scale(0.9);
+    transform-origin: left center;
+  }
+}
+
+/* Approved final landscape design */
+.lms-public-home-topbar {
+  min-height: 74px;
+  border-bottom-color: rgba(137, 190, 255, 0.28);
+  background: linear-gradient(100deg, #082f82, #0d4caf 58%, #1267d2);
+  padding: 10px clamp(22px, 4.8vw, 86px);
+  color: #fff;
+  box-shadow: 0 8px 24px rgba(8, 47, 130, 0.18);
+}
+
+.lms-public-home-topbar .lms-topbar__left {
+  gap: clamp(26px, 4vw, 72px);
+}
+
+.lms-public-brand {
+  display: inline-flex;
+  min-width: max-content;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 850;
+  letter-spacing: -0.02em;
+}
+
+.lms-public-brand img {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--school-yellow, #ffd342);
+  border-radius: 50%;
+  background: #fff;
+  object-fit: cover;
+  box-shadow: 0 7px 18px rgba(3, 27, 77, 0.24);
+}
+
+.lms-public-nav {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(18px, 2.6vw, 42px);
+}
+
+.lms-public-nav a {
+  position: relative;
+  color: rgba(255, 255, 255, 0.84);
+  padding: 15px 0;
+  font-size: 13px;
+  font-weight: 750;
+  white-space: nowrap;
+  transition: color 160ms ease;
+}
+
+.lms-public-nav a::after {
+  position: absolute;
+  right: 0;
+  bottom: 4px;
+  left: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: transparent;
+  content: "";
+}
+
+.lms-public-nav a:hover,
+.lms-public-nav a.is-active {
+  color: #fff;
+}
+
+.lms-public-nav a.is-active::after {
+  background: var(--school-yellow, #ffd342);
+}
+
+.lms-global-search--home-hidden {
+  display: none;
+}
+
+.lms-public-home-topbar .lms-login-button {
+  min-height: 42px;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  background: rgba(5, 43, 118, 0.26);
+  color: #fff;
+  box-shadow: none;
+}
+
+.lms-public-home-topbar .lms-login-button:hover {
+  border-color: #fff;
+  background: #fff;
+  color: #0b3f98;
+}
+
+.lms-public-home-topbar :is(.lms-icon-button, .lms-profile-chip, .lms-signout-button) {
+  border-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.lms-public-home-topbar .lms-profile-chip small {
+  color: #cce6ff;
+}
+
+.home-v2--school .home-hero-v2 {
+  min-height: 500px;
+  padding-top: 48px;
+  padding-bottom: 44px;
+}
+
+.home-v2--school #featured-lessons {
+  scroll-margin-top: 96px;
+}
+
+.home-v2--school .home-game-card__body > .home-game-card__visual-top {
+  margin-bottom: 9px;
+}
+
+.home-v2--school .home-game-card__body .home-game-card__live-badge,
+.home-v2--school .home-game-card__body .home-game-card__grade {
+  border-color: #c7dcf8;
+  background: #edf6ff;
+  color: #2258a7;
+}
+
+.home-v2--school .home-game-card__body .home-game-card__live-badge > span {
+  background: #20bd75;
+  box-shadow: 0 0 0 3px rgba(32, 189, 117, 0.13);
+}
+
+@media (min-width: 761px) {
+  .home-v2--school .home-game-card {
+    display: grid;
+    min-height: 188px;
+    grid-template-columns: 124px minmax(0, 1fr);
+  }
+
+  .home-v2--school .home-game-card__visual {
+    min-height: 100%;
+    border-right: 1px solid rgba(255, 255, 255, 0.25);
+    padding: 10px;
+  }
+
+  .home-v2--school .home-game-card__art {
+    top: 50%;
+    width: 94px;
+    height: 86px;
+    transform: translateY(-53%);
+  }
+
+  .home-v2--school .home-game-card__art-main {
+    width: 70px;
+    height: 70px;
+    border-radius: 19px;
+  }
+
+  .home-v2--school .home-game-card__art-main > svg {
+    width: 38px;
+    height: 38px;
+  }
+
+  .home-v2--school .home-game-card__art-companion {
+    width: 35px;
+    height: 35px;
+    border-radius: 11px;
+  }
+
+  .home-v2--school .home-game-card__art-companion > svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .home-v2--school .home-game-card__art-play {
+    width: 31px;
+    height: 31px;
+    border-radius: 10px;
+  }
+
+  .home-v2--school .home-game-card__kicker {
+    right: 8px;
+    bottom: 9px;
+    left: 8px;
+    font-size: 7px;
+  }
+
+  .home-v2--school .home-game-card__body {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    padding: 12px 13px;
+  }
+
+  .home-v2--school .home-game-card__body > .home-game-card__visual-top {
+    margin-bottom: 7px;
+  }
+
+  .home-v2--school .home-game-card__body .home-game-card__live-badge,
+  .home-v2--school .home-game-card__body .home-game-card__grade {
+    min-height: 21px;
+    padding: 3px 7px;
+    font-size: 7px;
+  }
+
+  .home-v2--school .home-game-card__title-row h3 {
+    font-size: 15px;
+    line-height: 1.22;
+  }
+
+  .home-v2--school .home-game-card__award {
+    width: 29px;
+    height: 29px;
+    flex-basis: 29px;
+    border-radius: 9px;
+  }
+
+  .home-v2--school .home-game-card__body > p {
+    min-height: 34px;
+    margin: 6px 0 7px;
+    font-size: 10px;
+    line-height: 1.45;
+    -webkit-line-clamp: 2;
+  }
+
+  .home-v2--school .home-game-card__facts {
+    gap: 4px;
+    padding-bottom: 7px;
+  }
+
+  .home-v2--school .home-game-card__facts span {
+    min-height: 22px;
+    padding: 3px 5px;
+    font-size: 7px;
+  }
+
+  .home-v2--school .home-game-card__facts svg {
+    width: 11px;
+    height: 11px;
+  }
+
+  .home-v2--school .home-game-card__footer {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 7px;
+    margin-top: auto;
+    padding-top: 7px;
+  }
+
+  .home-v2--school .home-game-card__secure-note {
+    font-size: 7px;
+    line-height: 1.3;
+  }
+
+  .home-v2--school .home-game-card__secure-note svg {
+    width: 12px;
+    height: 12px;
+  }
+
+  .home-v2--school .home-game-card__footer button {
+    width: auto;
+    min-width: 104px;
+    min-height: 34px;
+    border-radius: 9px;
+    padding: 7px 9px;
+    font-size: 9px;
+  }
+
+  .home-v2--school .home-game-card__footer button svg:last-child {
+    margin-left: 2px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .lms-public-home-topbar {
+    padding-inline: 24px;
+  }
+
+  .lms-public-brand span {
+    font-size: 15px;
+  }
+
+  .lms-public-nav {
+    gap: 18px;
+  }
+}
+
+@media (max-width: 900px) {
+  .lms-public-home-topbar .lms-topbar__left {
+    gap: 12px;
+  }
+
+  .lms-public-nav {
+    display: none;
+  }
+
+  .lms-public-brand {
+    flex: 1;
+  }
+}
+
+@media (max-width: 560px) {
+  .lms-public-home-topbar {
+    min-height: 68px;
+    padding-inline: 14px;
+  }
+
+  .lms-public-brand img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .lms-public-brand span {
+    max-width: 150px;
+    overflow: hidden;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

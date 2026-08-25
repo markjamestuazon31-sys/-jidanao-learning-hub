@@ -1,0 +1,210 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "schoolStructure": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin' && root.child('users').child(auth.uid).child('status').val() === 'active'",
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin' && root.child('users').child(auth.uid).child('status').val() === 'active'",
+      ".validate": "newData.hasChildren(['version','grades','updatedAt','updatedBy']) && newData.child('version').val() === 1 && newData.child('updatedAt').isNumber() && newData.child('updatedBy').isString()",
+      "grades": {
+        "$gradeKey": {
+          ".validate": "newData.hasChildren(['key','name','order','active','published','sectionCount']) && newData.child('key').val() === $gradeKey && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 40 && newData.child('order').isNumber() && newData.child('active').isBoolean() && newData.child('published').isBoolean() && newData.child('sectionCount').isNumber() && newData.child('sectionCount').val() === newData.child('sections').numChildren()",
+          "sections": {
+            "$sectionKey": {
+              ".validate": "newData.hasChildren(['key','name','order','active','published']) && newData.child('key').val() === $sectionKey && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 40 && newData.child('order').isNumber() && newData.child('active').isBoolean() && newData.child('published').isBoolean()"
+            }
+          }
+        }
+      }
+    },
+    "publishedSchoolStructure": {
+      ".read": true,
+      ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin' && root.child('users').child(auth.uid).child('status').val() === 'active'",
+      ".validate": "newData.hasChildren(['version','publishedCount','updatedAt','updatedBy']) && newData.child('version').val() === 1 && newData.child('publishedCount').isNumber() && newData.child('publishedCount').val() >= 0 && newData.child('updatedAt').isNumber() && newData.child('updatedBy').isString()",
+      "grades": {
+        "$gradeKey": {
+          ".validate": "newData.hasChildren(['key','name','order','active','published','sectionCount','sections']) && newData.child('key').val() === $gradeKey && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 40 && newData.child('order').isNumber() && newData.child('active').val() === true && newData.child('published').val() === true && newData.child('sectionCount').isNumber() && newData.child('sectionCount').val() > 0 && newData.child('sectionCount').val() === newData.child('sections').numChildren()",
+          "sections": {
+            "$sectionKey": {
+              ".validate": "newData.hasChildren(['key','name','order','active','published']) && newData.child('key').val() === $sectionKey && newData.child('name').isString() && newData.child('name').val().length > 0 && newData.child('name').val().length <= 40 && newData.child('order').isNumber() && newData.child('active').val() === true && newData.child('published').val() === true"
+            }
+          }
+        }
+      }
+    },
+    "users": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide'))",
+      ".indexOn": ["role", "gradeLevel", "classKey", "status", "employeeId"],
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (root.child('users').child(auth.uid).child('status').val() === 'active' && root.child('users').child(auth.uid).child('role').val() === 'admin') || (root.child('users').child(auth.uid).child('status').val() === 'active' && root.child('users').child(auth.uid).child('role').val() === 'teacher' && data.child('role').val() === 'student' && (root.child('users').child(auth.uid).child('assignedClasses').child(data.child('classKey').val()).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide'))) ",
+        ".write": "auth != null && ((auth.uid === $uid && ((!data.exists() && newData.child('role').val() === 'student' && newData.child('email').val() === auth.token.email) || (data.exists() && data.child('status').val() === 'active' && newData.child('role').val() === data.child('role').val() && newData.child('status').val() === data.child('status').val() && newData.child('email').val() === data.child('email').val() && newData.child('gradeLevel').val() === data.child('gradeLevel').val() && ((data.child('section').exists() && data.child('classKey').exists() && newData.child('section').val() === data.child('section').val() && newData.child('classKey').val() === data.child('classKey').val()) || (!data.child('classKey').exists() && newData.child('section').exists() && newData.child('classKey').exists()))))) || (root.child('users').child(auth.uid).child('role').val() === 'admin' && root.child('users').child(auth.uid).child('status').val() === 'active'))",
+        ".validate": "newData.hasChildren(['uid','name','email','role','status']) && newData.child('uid').val() === $uid && (newData.child('role').val() === 'student' || newData.child('role').val() === 'teacher' || newData.child('role').val() === 'admin') && (newData.child('status').val() === 'active' || newData.child('status').val() === 'disabled') && (newData.child('role').val() !== 'student' || (newData.hasChildren(['gradeLevel','gradeKey','section','sectionKey','classKey']) && newData.child('classKey').val() === newData.child('gradeKey').val() + '__' + newData.child('sectionKey').val() && ((false && (newData.child('gradeLevel').val() === 'Grade 3' || newData.child('gradeLevel').val() === 'Grade 4' || newData.child('gradeLevel').val() === 'Grade 5' || newData.child('gradeLevel').val() === 'Grade 6') && (newData.child('section').val() === 'Section 1' || newData.child('section').val() === 'Section 2' || newData.child('section').val() === 'Section 3' || newData.child('section').val() === 'Section 4' || newData.child('section').val() === 'Section 5' || newData.child('section').val() === 'Section 6')) || (root.child('publishedSchoolStructure').child('grades').child(newData.child('gradeKey').val()).child('published').val() === true && root.child('publishedSchoolStructure').child('grades').child(newData.child('gradeKey').val()).child('name').val() === newData.child('gradeLevel').val() && root.child('publishedSchoolStructure').child('grades').child(newData.child('gradeKey').val()).child('sections').child(newData.child('sectionKey').val()).child('published').val() === true && root.child('publishedSchoolStructure').child('grades').child(newData.child('gradeKey').val()).child('sections').child(newData.child('sectionKey').val()).child('name').val() === newData.child('section').val()))))"
+      }
+    },
+    "classRosters": {
+      "$classKey": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child($classKey).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide'))) ",
+        "$uid": {
+          ".write": "auth != null && (auth.uid === $uid || (root.child('users').child(auth.uid).child('role').val() === 'admin' && root.child('users').child(auth.uid).child('status').val() === 'active'))",
+          ".validate": "!newData.exists() || newData.val() === true"
+        }
+      }
+    },
+    "profilePhotos": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide'))",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (root.child('users').child(auth.uid).child('status').val() === 'active' && root.child('users').child(auth.uid).child('role').val() === 'admin') || (root.child('users').child(auth.uid).child('status').val() === 'active' && root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child(root.child('users').child($uid).child('classKey').val()).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide'))) ",
+        ".write": "auth != null && auth.uid === $uid && root.child('users').child(auth.uid).child('role').val() === 'student' && root.child('users').child(auth.uid).child('status').val() === 'active'",
+        ".validate": "!newData.exists() || (newData.hasChildren(['dataUrl','mimeType','size','width','height','updatedAt']) && newData.child('mimeType').val() === 'image/webp' && newData.child('dataUrl').isString() && newData.child('dataUrl').val().matches(/^data:image.webp;base64,/) && newData.child('dataUrl').val().length <= 190000 && newData.child('size').isNumber() && newData.child('size').val() <= 140000 && newData.child('width').val() === 256 && newData.child('height').val() === 256 && newData.child('updatedAt').isNumber())"
+      }
+    },
+    "publishedCatalog": {
+      ".read": true,
+      "$gradeKey": {
+        "$contentType": {
+          "$contentId": {
+            ".write": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && ((!newData.exists() && data.child('teacherId').val() === auth.uid) || (newData.exists() && newData.child('teacherId').val() === auth.uid && (root.child('users').child(auth.uid).child('assignedClasses').child(newData.child('classKey').val()).val() === true || (newData.child('section').val() === 'All Sections' && root.child('users').child(auth.uid).child('assignedGrades').child(newData.child('gradeKey').val()).val() === true) || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide')))))",
+            ".validate": "!newData.exists() || (newData.hasChildren(['title','grade','subject','section','status','type','teacherId']) && newData.child('status').val() === 'published' && (newData.child('type').val() === 'lesson' || newData.child('type').val() === 'game'))"
+          }
+        }
+      }
+    },
+    "lessons": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'teacher' || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+      ".indexOn": ["status", "teacherId", "grade", "section", "classKey", "subject"],
+      "$lessonId": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && ((root.child('users').child(auth.uid).child('role').val() === 'student' && data.child('status').val() === 'published' && data.child('grade').val() === root.child('users').child(auth.uid).child('gradeLevel').val() && (!data.child('section').exists() || data.child('section').val() === 'All Sections' || data.child('section').val() === root.child('users').child(auth.uid).child('section').val())) || root.child('users').child(auth.uid).child('role').val() === 'teacher' || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        ".write": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && ((!newData.exists() && data.child('teacherId').val() === auth.uid) || (newData.exists() && newData.child('teacherId').val() === auth.uid && (!data.exists() || data.child('teacherId').val() === auth.uid) && (root.child('users').child(auth.uid).child('assignedClasses').child(newData.child('classKey').val()).val() === true || (newData.child('section').val() === 'All Sections' && root.child('users').child(auth.uid).child('assignedGrades').child(newData.child('gradeKey').val()).val() === true) || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide'))))) ",
+        ".validate": "!newData.exists() || (newData.hasChildren(['teacherId','title','grade','gradeKey','section','sectionKey','classKey','subject','status']) && newData.child('classKey').val() === newData.child('gradeKey').val() + '__' + newData.child('sectionKey').val() && ((false && (newData.child('grade').val() === 'Grade 3' || newData.child('grade').val() === 'Grade 4' || newData.child('grade').val() === 'Grade 5' || newData.child('grade').val() === 'Grade 6') && (newData.child('section').val() === 'Section 1' || newData.child('section').val() === 'Section 2' || newData.child('section').val() === 'Section 3' || newData.child('section').val() === 'Section 4' || newData.child('section').val() === 'Section 5' || newData.child('section').val() === 'Section 6' || newData.child('section').val() === 'All Sections')) || (root.child('publishedSchoolStructure').child('grades').child(newData.child('gradeKey').val()).child('published').val() === true && root.child('publishedSchoolStructure').child('grades').child(newData.child('gradeKey').val()).child('name').val() === newData.child('grade').val() && ((newData.child('section').val() === 'All Sections' && newData.child('sectionKey').val() === 'all-sections') || (root.child('publishedSchoolStructure').child('grades').child(newData.child('gradeKey').val()).child('sections').child(newData.child('sectionKey').val()).child('published').val() === true && root.child('publishedSchoolStructure').child('grades').child(newData.child('gradeKey').val()).child('sections').child(newData.child('sectionKey').val()).child('name').val() === newData.child('section').val())))) && (newData.child('status').val() === 'draft' || newData.child('status').val() === 'published' || newData.child('status').val() === 'archived'))"
+      }
+    },
+    "games": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'teacher' || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+      ".indexOn": ["status", "teacherId", "grade", "section", "classKey", "subject"],
+      "$gameId": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && ((root.child('users').child(auth.uid).child('role').val() === 'student' && data.child('status').val() === 'published' && data.child('grade').val() === root.child('users').child(auth.uid).child('gradeLevel').val() && (!data.child('section').exists() || data.child('section').val() === 'All Sections' || data.child('section').val() === root.child('users').child(auth.uid).child('section').val())) || root.child('users').child(auth.uid).child('role').val() === 'teacher' || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        ".write": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && ((!newData.exists() && data.child('teacherId').val() === auth.uid) || (newData.exists() && newData.child('teacherId').val() === auth.uid && (!data.exists() || data.child('teacherId').val() === auth.uid) && (root.child('users').child(auth.uid).child('assignedClasses').child(newData.child('classKey').val()).val() === true || (newData.child('section').val() === 'All Sections' && root.child('users').child(auth.uid).child('assignedGrades').child(newData.child('gradeKey').val()).val() === true) || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide'))))) ",
+        ".validate": "!newData.exists() || (newData.hasChildren(['teacherId','title','grade','gradeKey','section','sectionKey','classKey','subject','status']) && newData.child('classKey').val() === newData.child('gradeKey').val() + '__' + newData.child('sectionKey').val() && ((false && (newData.child('grade').val() === 'Grade 3' || newData.child('grade').val() === 'Grade 4' || newData.child('grade').val() === 'Grade 5' || newData.child('grade').val() === 'Grade 6') && (newData.child('section').val() === 'Section 1' || newData.child('section').val() === 'Section 2' || newData.child('section').val() === 'Section 3' || newData.child('section').val() === 'Section 4' || newData.child('section').val() === 'Section 5' || newData.child('section').val() === 'Section 6' || newData.child('section').val() === 'All Sections')) || (root.child('publishedSchoolStructure').child('grades').child(newData.child('gradeKey').val()).child('published').val() === true && root.child('publishedSchoolStructure').child('grades').child(newData.child('gradeKey').val()).child('name').val() === newData.child('grade').val() && ((newData.child('section').val() === 'All Sections' && newData.child('sectionKey').val() === 'all-sections') || (root.child('publishedSchoolStructure').child('grades').child(newData.child('gradeKey').val()).child('sections').child(newData.child('sectionKey').val()).child('published').val() === true && root.child('publishedSchoolStructure').child('grades').child(newData.child('gradeKey').val()).child('sections').child(newData.child('sectionKey').val()).child('name').val() === newData.child('section').val())))) && (newData.child('status').val() === 'draft' || newData.child('status').val() === 'published' || newData.child('status').val() === 'archived'))"
+      }
+    },
+    "cameraPrograms": {
+      "$classKey": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child($classKey).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide')))",
+        "$track": {
+          "$levelKey": {
+            ".write": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child($classKey).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide') && ((!newData.exists() && data.child('teacherId').val() === auth.uid) || (newData.exists() && newData.child('teacherId').val() === auth.uid))))",
+            ".validate": "!newData.exists() || (newData.hasChildren(['teacherId','teacherName','title','grade','section','classKey','track','subject','level','questions','status','createdAt','updatedAt']) && newData.child('classKey').val() === $classKey && newData.child('track').val() === $track && ($track === 'math' || $track === 'english') && newData.child('level').isNumber() && newData.child('level').val() >= 1 && newData.child('level').val() <= 10 && newData.child('questions').numChildren() === 10 && (newData.child('status').val() === 'draft' || newData.child('status').val() === 'published') && newData.child('createdAt').isNumber() && newData.child('updatedAt').isNumber())"
+          }
+        }
+      }
+    },
+    "cameraPublished": {
+      "$classKey": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child($classKey).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide')) || (root.child('users').child(auth.uid).child('role').val() === 'student' && root.child('users').child(auth.uid).child('classKey').val() === $classKey))",
+        "$track": {
+          "$levelKey": {
+            ".write": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child($classKey).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide') && ((!newData.exists() && data.child('teacherId').val() === auth.uid) || (newData.exists() && newData.child('teacherId').val() === auth.uid))))",
+            ".validate": "!newData.exists() || (newData.hasChildren(['teacherId','teacherName','title','grade','section','classKey','track','subject','level','questions','status','createdAt','updatedAt','publishedAt']) && newData.child('classKey').val() === $classKey && newData.child('track').val() === $track && ($track === 'math' || $track === 'english') && newData.child('level').isNumber() && newData.child('level').val() >= 1 && newData.child('level').val() <= 10 && newData.child('questions').numChildren() === 10 && newData.child('status').val() === 'published' && newData.child('publishedAt').isNumber())"
+          }
+        }
+      }
+    },
+    "quizBank": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && query.orderByChild === 'teacherId' && query.equalTo === auth.uid))",
+      ".indexOn": ["teacherId", "grade", "section", "classKey", "subject", "gradingPeriod", "status"],
+      "$quizId": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && data.child('teacherId').val() === auth.uid))",
+        ".write": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && ((!newData.exists() && data.child('teacherId').val() === auth.uid) || (newData.exists() && newData.child('teacherId').val() === auth.uid && (!data.exists() || data.child('teacherId').val() === auth.uid) && (root.child('users').child(auth.uid).child('assignedClasses').child(newData.child('classKey').val()).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide')))))",
+        ".validate": "!newData.exists() || (newData.hasChildren(['id','teacherId','title','grade','gradeKey','section','sectionKey','classKey','subject','gradingPeriod','schoolYear','status','questions','settings','createdAt','updatedAt']) && newData.child('id').val() === $quizId && (newData.child('status').val() === 'draft' || newData.child('status').val() === 'published' || newData.child('status').val() === 'closed') && newData.child('questions').numChildren() >= 1 && newData.child('questions').numChildren() <= 100)"
+      }
+    },
+    "publishedQuizzes": {
+      "$classKey": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child($classKey).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide')) || (root.child('users').child(auth.uid).child('role').val() === 'student' && root.child('users').child(auth.uid).child('classKey').val() === $classKey))",
+        "$quizId": {
+          ".write": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child($classKey).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide') && ((!newData.exists() && data.child('teacherId').val() === auth.uid) || (newData.exists() && newData.child('teacherId').val() === auth.uid))))",
+          ".validate": "!newData.exists() || (newData.hasChildren(['id','teacherId','title','grade','section','classKey','subject','gradingPeriod','schoolYear','status','questions','settings','publishedAt']) && newData.child('id').val() === $quizId && newData.child('classKey').val() === $classKey && newData.child('status').val() === 'published' && newData.child('questions').numChildren() >= 1 && newData.child('questions').numChildren() <= 100)"
+        }
+      }
+    },
+    "quizAttempts": {
+      "$quizId": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && root.child('quizBank').child($quizId).child('teacherId').val() === auth.uid))",
+        "$studentUid": {
+          ".read": "auth != null && (auth.uid === $studentUid || (root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && root.child('quizBank').child($quizId).child('teacherId').val() === auth.uid))))",
+          "$attemptId": {
+            ".write": "auth != null && ((auth.uid === $studentUid && !data.exists() && root.child('users').child(auth.uid).child('role').val() === 'student' && root.child('users').child(auth.uid).child('status').val() === 'active' && root.child('publishedQuizzes').child(root.child('users').child(auth.uid).child('classKey').val()).child($quizId).child('status').val() === 'published' && newData.child('studentUid').val() === auth.uid && newData.child('quizId').val() === $quizId && newData.child('classKey').val() === root.child('users').child(auth.uid).child('classKey').val()) || (root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && root.child('quizBank').child($quizId).child('teacherId').val() === auth.uid))))",
+            ".validate": "newData.hasChildren(['id','quizId','studentUid','studentName','grade','section','classKey','answers','grading','autoScore','finalScore','maxPoints','scorePercent','status','submittedAt']) && newData.child('id').val() === $attemptId && newData.child('quizId').val() === $quizId && newData.child('studentUid').val() === $studentUid && newData.child('submittedAt').isNumber() && newData.child('scorePercent').isNumber() && newData.child('scorePercent').val() >= 0 && newData.child('scorePercent').val() <= 100"
+          }
+        }
+      }
+    },
+    "attendance": {
+      "$classKey": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child($classKey).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide'))) ",
+        "$dateKey": {
+          "$studentUid": {
+            ".read": "auth != null && (auth.uid === $studentUid || (root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child($classKey).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide')))))",
+            ".write": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child($classKey).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide') && ((!newData.exists() && data.child('teacherId').val() === auth.uid) || (newData.exists() && newData.child('teacherId').val() === auth.uid && newData.child('classKey').val() === $classKey && newData.child('studentUid').val() === $studentUid && root.child('users').child($studentUid).child('classKey').val() === $classKey))))",
+            ".validate": "!newData.exists() || (newData.hasChildren(['id','studentUid','studentName','teacherId','teacherName','grade','section','classKey','date','schoolYear','status','createdAt','updatedAt']) && newData.child('studentUid').val() === $studentUid && newData.child('classKey').val() === $classKey && newData.child('date').val() === $dateKey && (newData.child('status').val() === 'present' || newData.child('status').val() === 'absent' || newData.child('status').val() === 'late' || newData.child('status').val() === 'excused') && (!newData.child('note').exists() || (newData.child('note').isString() && newData.child('note').val().length <= 300)) && newData.child('createdAt').isNumber() && newData.child('updatedAt').isNumber())"
+          }
+        }
+      }
+    },
+    "progress": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (root.child('users').child(auth.uid).child('status').val() === 'active' && root.child('users').child(auth.uid).child('role').val() === 'admin') || (root.child('users').child(auth.uid).child('status').val() === 'active' && root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child(root.child('users').child($uid).child('classKey').val()).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide'))) ",
+        ".write": "auth != null && ((auth.uid === $uid && root.child('users').child(auth.uid).child('role').val() === 'student' && root.child('users').child(auth.uid).child('status').val() === 'active') || (root.child('users').child(auth.uid).child('status').val() === 'active' && root.child('users').child(auth.uid).child('role').val() === 'admin') || (root.child('users').child(auth.uid).child('status').val() === 'active' && root.child('users').child(auth.uid).child('role').val() === 'teacher' && root.child('users').child(auth.uid).child('assignedClasses').child(root.child('users').child($uid).child('classKey').val()).val() === true))",
+        ".validate": "!newData.child('summary').child('totalXp').exists() || (newData.child('summary').child('totalXp').isNumber() && newData.child('summary').child('totalXp').val() >= 0 && newData.child('summary').child('totalXp').val() <= 1000000)"
+      }
+    },
+    "reflections": { "$uid": { ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && root.child('users').child(auth.uid).child('assignedClasses').child(root.child('users').child($uid).child('classKey').val()).val() === true))", "$lessonId": { ".write": "auth != null && auth.uid === $uid && root.child('users').child(auth.uid).child('role').val() === 'student' && root.child('users').child(auth.uid).child('status').val() === 'active'", ".validate": "!newData.exists() || (newData.child('lessonId').val() === $lessonId && newData.child('studentUid').val() === $uid && newData.child('reflection').isString() && newData.child('reflection').val().length <= 2000 && newData.child('submittedAt').isNumber())" } } },
+    "gradeDrafts": {
+      "$teacherId": {
+        ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (auth.uid === $teacherId || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        "$uid": {
+          "$schoolYearKey": {
+            "$periodKey": {
+              "$subjectKey": {
+                ".write": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && ((auth.uid === $teacherId && root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child(root.child('users').child($uid).child('classKey').val()).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide')) || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+                ".validate": "!newData.exists() || (newData.hasChildren(['studentUid','teacherId','grade','section','classKey','schoolYear','gradingPeriod','subject','score','remarks','status','updatedAt']) && newData.child('studentUid').val() === $uid && newData.child('teacherId').val() === $teacherId && newData.child('status').val() === 'draft' && newData.child('score').isNumber() && newData.child('score').val() >= 60 && newData.child('score').val() <= 100)"
+              }
+            }
+          }
+        }
+      }
+    },
+    "grades": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child(root.child('users').child($uid).child('classKey').val()).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide'))) ",
+        ".write": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && (root.child('users').child(auth.uid).child('assignedClasses').child(root.child('users').child($uid).child('classKey').val()).val() === true || root.child('users').child(auth.uid).child('teachingScope').val() === 'schoolwide'))) ",
+        "$schoolYearKey": {
+          "$periodKey": {
+            "$subjectKey": {
+              ".validate": "!newData.exists() || (newData.hasChildren(['studentUid','teacherId','grade','section','classKey','schoolYear','gradingPeriod','subject','score','remarks','status','releasedAt','updatedAt']) && newData.child('studentUid').val() === $uid && newData.child('status').val() === 'released' && newData.child('score').isNumber() && newData.child('score').val() >= 60 && newData.child('score').val() <= 100)"
+            }
+          }
+        }
+      }
+    },
+    "certificates": { "$uid": { ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && root.child('users').child(auth.uid).child('assignedClasses').child(root.child('users').child($uid).child('classKey').val()).val() === true))", ".write": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'admin' || (root.child('users').child(auth.uid).child('role').val() === 'teacher' && root.child('users').child(auth.uid).child('assignedClasses').child(root.child('users').child($uid).child('classKey').val()).val() === true))" } },
+    "reports": { ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'teacher' || root.child('users').child(auth.uid).child('role').val() === 'admin')", ".write": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active' && (root.child('users').child(auth.uid).child('role').val() === 'teacher' || root.child('users').child(auth.uid).child('role').val() === 'admin')" },
+    "academicSettings": { ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active'", ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin' && root.child('users').child(auth.uid).child('status').val() === 'active'" },
+    "announcements": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('status').val() === 'active'",
+      ".indexOn": ["createdAt", "status", "audience", "expiresAt"],
+      "$announcementId": {
+        ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin' && root.child('users').child(auth.uid).child('status').val() === 'active'",
+        ".validate": "!newData.exists() || (newData.hasChildren(['id','title','message','audience','priority','status','createdBy','createdAt','updatedAt']) && newData.child('id').val() === $announcementId && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('title').val().length <= 120 && newData.child('message').isString() && newData.child('message').val().length > 0 && newData.child('message').val().length <= 2000 && (newData.child('audience').val() === 'all' || newData.child('audience').val() === 'teachers' || newData.child('audience').val() === 'students' || newData.child('audience').val() === 'class') && (newData.child('priority').val() === 'normal' || newData.child('priority').val() === 'important' || newData.child('priority').val() === 'urgent') && newData.child('status').val() === 'published' && newData.child('createdAt').isNumber() && newData.child('updatedAt').isNumber())"
+      }
+    },
+    "adminAudit": {
+      ".read": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin' && root.child('users').child(auth.uid).child('status').val() === 'active'",
+      ".indexOn": ["createdAt", "administratorUid", "action"],
+      "$auditId": {
+        ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin' && root.child('users').child(auth.uid).child('status').val() === 'active' && !data.exists() && newData.child('administratorUid').val() === auth.uid",
+        ".validate": "newData.hasChildren(['id','action','summary','administratorUid','createdAt']) && newData.child('id').val() === $auditId && newData.child('action').isString() && newData.child('summary').isString() && newData.child('summary').val().length <= 500 && newData.child('createdAt').isNumber()"
+      }
+    }
+  }
+}

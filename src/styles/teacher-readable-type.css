@@ -1,0 +1,175 @@
+/* Teacher workspace readability layer.
+   Loaded last so the whole teacher experience uses one accessible type scale. */
+.role-teacher-content {
+  --teacher-type: 16px;
+  --teacher-type-small: 13.5px;
+  --teacher-type-label: 14px;
+  --teacher-type-control: 15px;
+  color: #14213d;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: var(--teacher-type);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.role-teacher-content h1 {
+  font-size: clamp(2rem, 3vw, 2.75rem) !important;
+  line-height: 1.12 !important;
+  letter-spacing: -.035em;
+}
+
+.role-teacher-content h2 {
+  font-size: clamp(1.25rem, 1.8vw, 1.55rem) !important;
+  line-height: 1.25 !important;
+  letter-spacing: -.018em;
+}
+
+.role-teacher-content h3 {
+  font-size: 1.125rem !important;
+  line-height: 1.35 !important;
+}
+
+.role-teacher-content h4 {
+  font-size: 1rem !important;
+  line-height: 1.4 !important;
+}
+
+.role-teacher-content p,
+.role-teacher-content li,
+.role-teacher-content dd,
+.role-teacher-content .muted {
+  font-size: 15px !important;
+  line-height: 1.62 !important;
+}
+
+.role-teacher-content small,
+.role-teacher-content .teacher-studio-section-heading p,
+.role-teacher-content .teacher-camera-heading span,
+.role-teacher-content .teacher-camera-level-focus span,
+.role-teacher-content .teacher-workspace-hero > div > span,
+.role-teacher-content .teacher-dashboard-hero > div > span {
+  font-size: var(--teacher-type-small) !important;
+  line-height: 1.48 !important;
+}
+
+.role-teacher-content label,
+.role-teacher-content legend,
+.role-teacher-content dt,
+.role-teacher-content th {
+  color: #172746;
+  font-size: var(--teacher-type-label) !important;
+  font-weight: 700 !important;
+  line-height: 1.42 !important;
+}
+
+.role-teacher-content input,
+.role-teacher-content select,
+.role-teacher-content textarea {
+  min-height: 46px;
+  color: #172033 !important;
+  font-size: var(--teacher-type-control) !important;
+  line-height: 1.5 !important;
+}
+
+.role-teacher-content textarea { min-height: 104px; }
+.role-teacher-content input::placeholder,
+.role-teacher-content textarea::placeholder { color: #6c7890 !important; opacity: 1; }
+
+.role-teacher-content button,
+.role-teacher-content a[class*="button"],
+.role-teacher-content a[class*="primary"],
+.role-teacher-content a[class*="secondary"] {
+  font-size: 14.5px !important;
+  line-height: 1.3 !important;
+}
+
+.role-teacher-content table { font-size: 14px !important; line-height: 1.5; }
+.role-teacher-content th { letter-spacing: .025em !important; }
+.role-teacher-content td { color: #23324e; font-size: 14px !important; line-height: 1.5 !important; }
+
+.role-teacher-content .teacher-workspace-state,
+.role-teacher-content .alert,
+.role-teacher-content [class*="validation"],
+.role-teacher-content [class*="publish-note"],
+.role-teacher-content [class*="approval"] {
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+.role-teacher-content .teacher-dashboard-metrics small,
+.role-teacher-content .teacher-workspace-metrics small,
+.role-teacher-content .teacher-attendance-metrics small,
+.role-teacher-content .teacher-gradebook-metrics small,
+.role-teacher-content .teacher-quiz-metrics small {
+  font-size: 13.5px !important;
+}
+
+.role-teacher-content .teacher-dashboard-metrics strong,
+.role-teacher-content .teacher-workspace-metrics strong,
+.role-teacher-content .teacher-attendance-metrics strong,
+.role-teacher-content .teacher-gradebook-metrics strong,
+.role-teacher-content .teacher-quiz-metrics strong {
+  font-size: 1.55rem !important;
+  line-height: 1.15 !important;
+}
+
+.role-teacher-content .content-class-step strong,
+.role-teacher-content .content-class-step small,
+.role-teacher-content .game-format-grid strong,
+.role-teacher-content .game-format-grid small,
+.role-teacher-content .content-question-list strong,
+.role-teacher-content .content-question-list small,
+.role-teacher-content .teacher-camera-item__toggle strong,
+.role-teacher-content .teacher-camera-item__toggle small,
+.role-teacher-content .teacher-camera-level-grid strong,
+.role-teacher-content .teacher-camera-level-grid small,
+.role-teacher-content .teacher-class-switcher strong,
+.role-teacher-content .teacher-class-switcher small,
+.role-teacher-content .teacher-attendance-class-switcher strong,
+.role-teacher-content .teacher-attendance-class-switcher small {
+  line-height: 1.45 !important;
+}
+
+.role-teacher-content .content-class-step strong,
+.role-teacher-content .game-format-grid strong,
+.role-teacher-content .content-question-list strong,
+.role-teacher-content .teacher-camera-item__toggle strong,
+.role-teacher-content .teacher-camera-level-grid strong {
+  font-size: 14px !important;
+}
+
+.role-teacher-content .content-class-step small,
+.role-teacher-content .game-format-grid small,
+.role-teacher-content .content-question-list small,
+.role-teacher-content .teacher-camera-item__toggle small,
+.role-teacher-content .teacher-camera-level-grid small {
+  font-size: 12.75px !important;
+}
+
+.role-sidebar.role-teacher .teacher-sidebar-identity-copy strong { font-size: 15px; }
+.role-sidebar.role-teacher .teacher-sidebar-identity-copy small { font-size: 12.5px; }
+.role-sidebar.role-teacher .teacher-sidebar-class label { font-size: 12.5px; }
+.role-sidebar.role-teacher .teacher-sidebar-class select { font-size: 14px; }
+.role-sidebar.role-teacher .sidebar-heading { font-size: 13px; }
+.role-sidebar.role-teacher .menu-item { font-size: 15px; line-height: 1.35; }
+.role-sidebar.role-teacher .teacher-sidebar-inspiration strong { font-size: 13.5px; }
+.role-sidebar.role-teacher .teacher-sidebar-inspiration span { font-size: 11.5px; line-height: 1.5; }
+.role-sidebar.role-teacher .teacher-sidebar-footer > button { font-size: 14.5px; }
+
+.role-teacher-topbar .lms-global-search input,
+.role-teacher-topbar .lms-profile-chip strong,
+.role-teacher-topbar .lms-signout-button { font-size: 14px; }
+.role-teacher-topbar .lms-profile-chip small { font-size: 12.5px; }
+
+@media (max-width: 760px) {
+  .role-teacher-content { --teacher-type: 15px; --teacher-type-control: 16px; }
+  .role-teacher-content h1 { font-size: clamp(1.75rem, 8vw, 2.2rem) !important; }
+  .role-teacher-content h2 { font-size: 1.25rem !important; }
+  .role-teacher-content p, .role-teacher-content li { font-size: 14.5px !important; }
+  .role-teacher-content input, .role-teacher-content select, .role-teacher-content textarea { font-size: 16px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .role-teacher-content *, .role-sidebar.role-teacher * { scroll-behavior: auto !important; }
+}

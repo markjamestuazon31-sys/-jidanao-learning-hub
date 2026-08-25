@@ -1,0 +1,247 @@
+import {
+  CalendarCheck2,
+  CalendarDays,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Clock3,
+  Download,
+  FileCheck2,
+  LoaderCircle,
+  RefreshCw,
+  Save,
+  Search,
+  UserCheck,
+  UserMinus,
+  Users,
+} from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import ProfileAvatar from "../components/ProfileAvatar";
+import { useAuth } from "../context/AuthContext";
+import { useSchoolStructure } from "../context/SchoolStructureContext";
+import { assignedClassOptions } from "../data/schoolClasses";
+import {
+  ATTENDANCE_STATUSES,
+  attendanceDateKey,
+  getAttendanceForDate,
+  getAttendanceForMonth,
+  saveAttendanceRegister,
+  studentAttendanceSummary,
+  summarizeAttendance,
+} from "../services/attendanceService";
+import { getAcademicSettings } from "../services/dataService";
+import { getTeacherStudentDirectory } from "../services/directoryService";
+
+function csvCell(value) {
+  return `"${String(value ?? "").replaceAll('"', '""')}"`;
+}
+
+function moveDate(dateValue, amount) {
+  const [year, month, day] = dateValue.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  date.setDate(date.getDate() + amount);
+  return attendanceDateKey(date);
+}
+
+function displayDate(value) {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("en-PH", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+export default function TeacherAttendance() {
+  const { user, profile } = useAuth();
+  const { structure } = useSchoolStructure();
+  const classOptions = useMemo(() => assignedClassOptions(profile, { includeAllSections: false, structure }), [profile, structure]);
+  const [selectedClassKey, setSelectedClassKey] = useState("");
+  const [date, setDate] = useState(() => attendanceDateKey(new Date()));
+  const [schoolYear, setSchoolYear] = useState("2026-2027");
+  const [students, setStudents] = useState([]);
+  const [entries, setEntries] = useState({});
+  const [monthRecords, setMonthRecords] = useState({});
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+
+  const selectedClass = useMemo(() => classOptions.find((item) => item.key === selectedClassKey) || classOptions[0] || null, [classOptions, selectedClassKey]);
+  const classStudents = useMemo(() => students.filter((student) => student.classKey === selectedClass?.key), [selectedClass?.key, students]);
+  const monthKey = date.slice(0, 7);
+
+  useEffect(() => {
+    if (!classOptions.length || selectedClassKey) return;
+    setSelectedClassKey(classOptions[0].key);
+  }, [classOptions, selectedClassKey]);
+
+  useEffect(() => {
+    Promise.all([getTeacherStudentDirectory(), getAcademicSettings()])
+      .then(([directory, settings]) => {
+        setStudents(directory);
+        setSchoolYear(settings.schoolYear || "2026-2027");
+      })
+      .catch((loadError) => setError(loadError.message || "Unable to initialize the Attendance Tracker."));
+  }, []);
+
+  const loadRegister = useCallback(async () => {
+    if (!selectedClass?.key) {
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError("");
+    setMessage("");
+    try {
+      const [daily, monthly] = await Promise.all([
+        getAttendanceForDate(selectedClass.key, date),
+        getAttendanceForMonth(selectedClass.key, monthKey),
+      ]);
+      setEntries(Object.fromEntries(classStudents.map((student) => [student.uid, {
+        status: daily?.[student.uid]?.status || "",
+        note: daily?.[student.uid]?.note || "",
+      }])));
+      setMonthRecords(monthly);
+    } catch (loadError) {
+      setError(loadError.message || "Unable to load attendance records.");
+    } finally {
+      setLoading(false);
+    }
+  }, [classStudents, date, monthKey, selectedClass?.key]);
+
+  useEffect(() => { loadRegister(); }, [loadRegister]);
+
+  const filteredStudents = useMemo(() => {
+    const term = query.trim().toLowerCase();
+    return classStudents.filter((student) => !term || [student.name, student.email]
+      .filter(Boolean).some((value) => String(value).toLowerCase().includes(term)));
+  }, [classStudents, query]);
+
+  const dailySummary = useMemo(() => summarizeAttendance(Object.values(entries).filter((entry) => entry.status)), [entries]);
+  const recorded = dailySummary.total;
+  const attendanceRate = recorded ? Math.round(((dailySummary.present + dailySummary.late) / recorded) * 100) : 0;
+
+  function setStudentEntry(uid, changes) {
+    setEntries((current) => ({ ...current, [uid]: { ...(current[uid] || {}), ...changes } }));
+    setMessage("");
+  }
+
+  function markAllPresent() {
+    setEntries((current) => Object.fromEntries(classStudents.map((student) => [student.uid, {
+      ...(current[student.uid] || {}),
+      status: "present",
+    }])));
+    setMessage("All learners marked present. Select Save attendance to record the register.");
+  }
+
+  async function save() {
+    if (!selectedClass) return;
+    setSaving(true);
+    setError("");
+    setMessage("");
+    try {
+      const result = await saveAttendanceRegister({
+        teacherId: user.uid,
+        grade: selectedClass.grade,
+        section: selectedClass.section,
+        date,
+        schoolYear,
+        students: classStudents,
+        entries,
+      });
+      await loadRegister();
+      setMessage(`${result.saved} attendance records saved for ${displayDate(date)}.`);
+    } catch (saveError) {
+      setError(saveError.message || "Unable to save attendance.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function exportMonth() {
+    const rows = [["Date", "Student", "Email", "Grade", "Section", "Status", "Note", "Recorded by"]];
+    Object.entries(monthRecords).sort(([a], [b]) => a.localeCompare(b)).forEach(([recordDate, day]) => {
+      Object.values(day || {}).forEach((record) => rows.push([
+        recordDate,
+        record.studentName,
+        record.studentEmail,
+        record.grade,
+        record.section,
+        record.status,
+        record.note || "",
+        record.teacherName || "",
+      ]));
+    });
+    if (rows.length === 1) {
+      setError("No attendance records are available for this month.");
+      return;
+    }
+    const blob = new Blob([rows.map((row) => row.map(csvCell).join(",")).join("\n")], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `Jidanao-Attendance-${selectedClass.grade}-${selectedClass.section}-${monthKey}.csv`.replaceAll(" ", "-");
+    link.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <div className="teacher-attendance-page">
+      <header className="teacher-attendance-hero">
+        <div><span>CLASS ATTENDANCE</span><h1>Daily Attendance Tracker</h1><p>Record and review attendance only for your administrator-assigned Grade and Section. Every update is stored with the teacher, date, and school year.</p></div>
+        <aside><CalendarCheck2 size={34} /><div><small>TODAY’S REGISTER</small><strong>{recorded}/{classStudents.length} recorded</strong><span>{attendanceRate}% attendance rate</span></div></aside>
+      </header>
+
+      {error && <div className="alert error" role="alert">{error}</div>}
+      {message && <div className="alert success" role="status">{message}</div>}
+      {!classOptions.length && <div className="alert error">No class is assigned to your teacher account. Ask the administrator to assign a Grade and Section.</div>}
+
+      {classOptions.length > 0 && <section className="teacher-attendance-class-switcher" aria-label="Attendance class selector"><div><Users size={19} /><span><strong>Select attendance class</strong><small>Switch registers without leaving this page</small></span></div><div>{classOptions.map((item) => <button type="button" className={selectedClass?.key === item.key ? "is-active" : ""} aria-pressed={selectedClass?.key === item.key} key={item.key} onClick={() => setSelectedClassKey(item.key)}><strong>{item.section}</strong><small>{item.grade}</small></button>)}</div></section>}
+
+      <section className="panel teacher-attendance-filters">
+        <label>Attendance date<div className="teacher-attendance-date-control"><button type="button" onClick={() => setDate((current) => moveDate(current, -1))} aria-label="Previous day"><ChevronLeft size={17} /></button><input type="date" value={date} onChange={(event) => setDate(event.target.value)} /><button type="button" onClick={() => setDate((current) => moveDate(current, 1))} aria-label="Next day"><ChevronRight size={17} /></button></div></label>
+        <label>School year<input value={schoolYear} onChange={(event) => setSchoolYear(event.target.value)} /></label>
+        <div className="teacher-attendance-filter-actions"><button className="ghost-button" type="button" onClick={loadRegister} disabled={loading}><RefreshCw className={loading ? "spin" : ""} size={17} /> Refresh</button><button className="ghost-button" type="button" onClick={exportMonth}><Download size={17} /> Export month</button></div>
+      </section>
+
+      <section className="teacher-attendance-metrics">
+        <article className="is-present"><UserCheck /><div><strong>{dailySummary.present}</strong><span>Present</span></div></article>
+        <article className="is-absent"><UserMinus /><div><strong>{dailySummary.absent}</strong><span>Absent</span></div></article>
+        <article className="is-late"><Clock3 /><div><strong>{dailySummary.late}</strong><span>Late</span></div></article>
+        <article className="is-excused"><FileCheck2 /><div><strong>{dailySummary.excused}</strong><span>Excused</span></div></article>
+        <article className="is-rate"><CalendarDays /><div><strong>{attendanceRate}%</strong><span>Attendance rate</span></div></article>
+      </section>
+
+      <section className="panel teacher-attendance-register">
+        <div className="teacher-attendance-heading">
+          <div><span><CalendarCheck2 size={21} /></span><div><h2>{displayDate(date)}</h2><p>{selectedClass?.label || "Select an assigned class"} · {schoolYear}</p></div></div>
+          <div><label><Search size={16} /><span className="sr-only">Search learners</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search learner…" /></label><button type="button" onClick={markAllPresent} disabled={!classStudents.length}><Check size={17} /> Mark all present</button><button className="primary-button" type="button" onClick={save} disabled={saving || !classStudents.length}><Save size={17} /> {saving ? "Saving…" : "Save attendance"}</button></div>
+        </div>
+
+        {loading ? (
+          <div className="teacher-workspace-state"><LoaderCircle className="spin" /> Loading the class register…</div>
+        ) : filteredStudents.length ? (
+          <div className="teacher-attendance-table-wrap">
+            <table>
+              <thead><tr><th>Learner</th><th>Daily status</th><th>Teacher note</th><th>{monthKey} summary</th></tr></thead>
+              <tbody>{filteredStudents.map((student) => {
+                const month = studentAttendanceSummary(monthRecords, student.uid);
+                return (
+                  <tr key={student.uid}>
+                    <td><div className="teacher-attendance-student"><ProfileAvatar uid={student.uid} name={student.name} size={38} decorative /><span><strong>{student.name}</strong><small>{student.email}</small></span></div></td>
+                    <td><div className="teacher-attendance-statuses">{ATTENDANCE_STATUSES.map((status) => <button type="button" className={`is-${status.value} ${entries[student.uid]?.status === status.value ? "active" : ""}`} onClick={() => setStudentEntry(student.uid, { status: status.value })} key={status.value}>{status.label}</button>)}</div></td>
+                    <td><input value={entries[student.uid]?.note || ""} onChange={(event) => setStudentEntry(student.uid, { note: event.target.value })} placeholder="Optional note" maxLength={300} /></td>
+                    <td><div className="teacher-attendance-month-summary"><span className="is-present">P {month.present}</span><span className="is-absent">A {month.absent}</span><span className="is-late">L {month.late}</span><span className="is-excused">E {month.excused}</span></div></td>
+                  </tr>
+                );
+              })}</tbody>
+            </table>
+          </div>
+        ) : <div className="teacher-workspace-state"><Users size={27} /> No registered students match this assigned class.</div>}
+      </section>
+    </div>
+  );
+}

@@ -1,0 +1,276 @@
+/* Light administrator navigation inspired by the Jidanao school seal. */
+.role-sidebar.role-admin {
+  --admin-sidebar-blue: #063bbd;
+  --admin-sidebar-bright: #1f6ff2;
+  --admin-sidebar-navy: #092a73;
+  --admin-sidebar-gold: #f2b705;
+  width: 304px;
+  min-height: calc(100vh - 76px);
+  padding: 18px 16px 16px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-right: 1px solid #d7e3f7;
+  background:
+    radial-gradient(circle at 12% 2%, rgba(78, 150, 255, .14), transparent 18rem),
+    linear-gradient(180deg, #ffffff 0%, #f7fbff 56%, #eef6ff 100%);
+  box-shadow: 10px 0 32px rgba(28, 72, 145, .08);
+  transition: width .24s ease, padding .24s ease;
+}
+
+.role-sidebar.role-admin::-webkit-scrollbar { width: 5px; }
+.role-sidebar.role-admin::-webkit-scrollbar-thumb { border-radius: 999px; background: #c8d9f3; }
+
+.admin-sidebar-identity {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  margin: 0 0 12px;
+  padding: 15px 42px 16px;
+  border: 1px solid #d8e5f7;
+  border-radius: 18px;
+  color: var(--admin-sidebar-navy);
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 12px 30px rgba(26, 70, 142, .08);
+}
+
+.admin-sidebar-identity::after,
+.admin-sidebar-footer::before {
+  width: 82%;
+  height: 1px;
+  content: "";
+  background: linear-gradient(90deg, transparent, var(--admin-sidebar-gold), transparent);
+}
+
+.admin-sidebar-identity::after { position: absolute; right: 9%; bottom: -8px; }
+
+.admin-sidebar-identity > img {
+  width: 68px;
+  height: 68px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+  box-shadow: 0 0 0 1px #bdd4fa, 0 8px 20px rgba(4, 48, 145, .15);
+}
+
+.admin-sidebar-identity-copy {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  text-align: center;
+}
+
+.admin-sidebar-identity-copy strong {
+  color: #092c76;
+  font-size: 16px;
+  font-weight: 850;
+  line-height: 1.25;
+  letter-spacing: -.015em;
+  white-space: nowrap;
+}
+
+.admin-sidebar-identity-copy small {
+  color: #62759a;
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.admin-sidebar-toggle,
+.admin-sidebar-mobile-close {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #cbdcf5;
+  border-radius: 12px;
+  color: var(--admin-sidebar-blue);
+  background: #fff;
+  box-shadow: 0 7px 18px rgba(21, 65, 139, .12);
+}
+
+.admin-sidebar-toggle {
+  position: absolute;
+  top: 12px;
+  right: 10px;
+}
+
+.admin-sidebar-toggle:hover,
+.admin-sidebar-mobile-close:hover {
+  border-color: #94b9f4;
+  background: #edf5ff;
+}
+
+.admin-sidebar-mobile-close {
+  display: none;
+  position: absolute;
+  top: 18px;
+  right: 14px;
+  z-index: 3;
+}
+
+.role-sidebar.role-admin > .sidebar-heading { display: none; }
+.role-sidebar.role-admin nav { display: grid; gap: 3px; padding-top: 5px; }
+.role-sidebar.role-admin .sidebar-menu-row { display: grid; gap: 5px; }
+
+.role-sidebar.role-admin .admin-sidebar-group {
+  margin: 15px 11px 4px;
+  color: #3269c4;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1.2;
+  letter-spacing: .11em;
+}
+
+.role-sidebar.role-admin .menu-item {
+  min-height: 50px;
+  margin: 0;
+  padding: 11px 13px;
+  border: 1px solid transparent;
+  border-radius: 13px;
+  color: #173b79;
+  background: transparent;
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.35;
+  box-shadow: none;
+  transition: color .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+
+.role-sidebar.role-admin .menu-item svg { flex: 0 0 auto; color: #1556c5; }
+
+.role-sidebar.role-admin .menu-item:hover {
+  transform: none;
+  border-color: #d3e2f7;
+  color: #072c75;
+  background: rgba(255, 255, 255, .92);
+  box-shadow: 0 7px 17px rgba(27, 75, 152, .07);
+}
+
+.role-sidebar.role-admin .menu-item.active {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(6, 59, 189, .1);
+  color: #fff;
+  background: linear-gradient(100deg, #073ec8 0%, #1767eb 64%, #2e7bf1 100%);
+  box-shadow: 0 12px 24px rgba(7, 68, 190, .22);
+}
+
+.role-sidebar.role-admin .menu-item.active::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  content: "";
+  background: var(--admin-sidebar-gold);
+}
+
+.role-sidebar.role-admin .menu-item.active svg { color: #fff; }
+
+.admin-sidebar-footer {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  margin-top: auto;
+  padding: 23px 3px 0;
+}
+
+.admin-sidebar-footer::before {
+  position: absolute;
+  top: 11px;
+  left: 9%;
+}
+
+.admin-sidebar-school {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px 8px;
+  border: 1px solid #dce8f8;
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .78);
+}
+
+.admin-sidebar-school img {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.admin-sidebar-school > div { min-width: 0; display: grid; gap: 2px; }
+.admin-sidebar-school strong { overflow: hidden; color: #0b337d; font-size: 12.5px; text-overflow: ellipsis; white-space: nowrap; }
+.admin-sidebar-school span { color: #66789a; font-size: 10px; line-height: 1.4; white-space: nowrap; }
+.admin-sidebar-school b { color: var(--admin-sidebar-gold); }
+
+.admin-sidebar-footer > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #d5e2f4;
+  border-radius: 12px;
+  color: #17499e;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.admin-sidebar-footer > button:hover { border-color: #a9c7f3; color: #063bbd; background: #f4f8ff; }
+.admin-sidebar-footer > button:disabled { cursor: wait; opacity: .65; }
+
+.role-sidebar.role-admin.admin-sidebar-collapsed { width: 92px; padding-right: 14px; padding-left: 14px; }
+.admin-sidebar-collapsed .admin-sidebar-identity { gap: 11px; padding: 12px 6px; }
+.admin-sidebar-collapsed .admin-sidebar-identity > img { width: 52px; height: 52px; }
+.admin-sidebar-collapsed .admin-sidebar-identity-copy,
+.admin-sidebar-collapsed .admin-sidebar-group,
+.admin-sidebar-collapsed .menu-item span,
+.admin-sidebar-collapsed .admin-sidebar-school > div,
+.admin-sidebar-collapsed .admin-sidebar-footer > button span { display: none; }
+.admin-sidebar-collapsed .admin-sidebar-toggle { position: static; }
+.admin-sidebar-collapsed nav { justify-items: center; }
+.role-sidebar.role-admin.admin-sidebar-collapsed .menu-item { justify-content: center; width: 56px; height: 56px; padding: 0; }
+.admin-sidebar-collapsed .admin-sidebar-school { justify-content: center; padding: 8px; }
+.admin-sidebar-collapsed .admin-sidebar-school img { width: 40px; height: 40px; }
+.admin-sidebar-collapsed .admin-sidebar-footer > button { padding: 0; }
+
+@media (max-width: 900px) {
+  .role-sidebar.role-admin,
+  .role-sidebar.role-admin.admin-sidebar-collapsed {
+    left: -326px;
+    width: min(304px, 90vw);
+    height: calc(100vh - 76px);
+    padding: 18px 16px 16px;
+  }
+
+  .role-sidebar.role-admin.open { left: 0; }
+  .role-sidebar.role-admin .admin-sidebar-toggle { display: none; }
+  .role-sidebar.role-admin .admin-sidebar-mobile-close { display: grid; }
+  .role-sidebar.role-admin .admin-sidebar-identity { padding-right: 50px; padding-left: 20px; }
+  .role-sidebar.role-admin .admin-sidebar-identity-copy,
+  .role-sidebar.role-admin .admin-sidebar-group,
+  .role-sidebar.role-admin .menu-item span,
+  .role-sidebar.role-admin .admin-sidebar-school > div,
+  .role-sidebar.role-admin .admin-sidebar-footer > button span { display: grid; }
+  .role-sidebar.role-admin nav { justify-items: stretch; }
+  .role-sidebar.role-admin.admin-sidebar-collapsed .menu-item { justify-content: flex-start; width: auto; height: auto; padding: 11px 13px; }
+  .role-sidebar.role-admin .admin-sidebar-school { justify-content: flex-start; padding: 10px 8px; }
+  .role-sidebar.role-admin .admin-sidebar-school img { width: 42px; height: 42px; }
+  .role-sidebar.role-admin .admin-sidebar-footer > button { padding: 0 12px; }
+}
+
+@media (max-width: 560px) {
+  .role-sidebar.role-admin,
+  .role-sidebar.role-admin.admin-sidebar-collapsed {
+    top: 68px;
+    height: calc(100vh - 68px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .role-sidebar.role-admin { transition: none; }
+}

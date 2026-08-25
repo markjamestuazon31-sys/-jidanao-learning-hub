@@ -1,0 +1,651 @@
+.auth-app-shell {
+  min-height: 100vh;
+  background: #eef4ff;
+}
+
+.auth-content-area {
+  min-height: 100vh;
+}
+
+.jidanao-login-page {
+  --login-blue: #145bd7;
+  --login-blue-dark: #073a9c;
+  --login-navy: #102342;
+  --login-muted: #66758e;
+  --login-line: #dce5f2;
+  position: relative;
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  overflow: hidden;
+  padding: 38px;
+  background:
+    radial-gradient(circle at 8% 10%, rgba(47, 128, 237, 0.15), transparent 26%),
+    radial-gradient(circle at 92% 90%, rgba(49, 190, 233, 0.13), transparent 26%),
+    linear-gradient(145deg, #f8fbff 0%, #eef4ff 55%, #f8fbff 100%);
+  color: var(--login-navy);
+}
+
+.jidanao-login-page::before,
+.jidanao-login-page::after {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  border: 1px solid rgba(20, 91, 215, 0.09);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.jidanao-login-page::before {
+  top: -190px;
+  right: 10%;
+}
+
+.jidanao-login-page::after {
+  bottom: -230px;
+  left: 7%;
+  width: 420px;
+  height: 420px;
+}
+
+.jidanao-login-back {
+  position: absolute;
+  z-index: 5;
+  top: 28px;
+  left: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 43px;
+  padding: 0 15px;
+  border: 1px solid rgba(141, 159, 188, 0.32);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 9px 24px rgba(23, 53, 99, 0.08);
+  color: #29405f;
+  font-size: 13px;
+  font-weight: 800;
+  backdrop-filter: blur(14px);
+  transition: transform 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.jidanao-login-back:hover {
+  transform: translateX(-3px);
+  border-color: rgba(20, 91, 215, 0.42);
+  color: var(--login-blue);
+}
+
+.jidanao-login-back:focus-visible,
+.jidanao-password-toggle:focus-visible,
+.jidanao-login-submit:focus-visible,
+.jidanao-login-register a:focus-visible {
+  outline: 3px solid rgba(64, 150, 255, 0.35);
+  outline-offset: 3px;
+}
+
+.jidanao-login-shell {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(480px, 1.05fr);
+  width: min(1260px, 100%);
+  min-height: 720px;
+  overflow: hidden;
+  border: 1px solid rgba(199, 212, 231, 0.76);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 30px 85px rgba(22, 55, 105, 0.16);
+  backdrop-filter: blur(18px);
+}
+
+.jidanao-login-showcase {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 52px 54px 42px;
+  background:
+    linear-gradient(155deg, rgba(4, 44, 135, 0.96), rgba(14, 101, 221, 0.94) 58%, rgba(18, 139, 216, 0.92)),
+    #0b55c4;
+  color: #fff;
+  isolation: isolate;
+}
+
+.jidanao-login-showcase::after {
+  position: absolute;
+  z-index: -1;
+  right: -130px;
+  bottom: -170px;
+  width: 460px;
+  height: 460px;
+  border: 74px solid rgba(255, 255, 255, 0.055);
+  border-radius: 50%;
+  content: "";
+}
+
+.jidanao-login-glow {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+.jidanao-login-glow--one {
+  top: -105px;
+  left: -115px;
+  width: 350px;
+  height: 350px;
+  background: rgba(0, 24, 101, 0.35);
+}
+
+.jidanao-login-glow--two {
+  top: 46%;
+  right: -100px;
+  width: 300px;
+  height: 300px;
+  background: rgba(89, 211, 255, 0.16);
+}
+
+.jidanao-login-dots {
+  position: absolute;
+  top: 40px;
+  right: 44px;
+  width: 112px;
+  height: 70px;
+  opacity: 0.48;
+  background-image: radial-gradient(circle, #9bd4ff 2px, transparent 2.4px);
+  background-size: 20px 20px;
+}
+
+.jidanao-login-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.jidanao-login-brand__seal {
+  display: grid;
+  width: 76px;
+  height: 76px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 18px 34px rgba(0, 25, 81, 0.22);
+}
+
+.jidanao-login-brand img {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.jidanao-login-brand strong,
+.jidanao-login-brand small {
+  display: block;
+}
+
+.jidanao-login-brand strong {
+  max-width: 245px;
+  font-size: 16px;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+}
+
+.jidanao-login-brand small {
+  margin-top: 5px;
+  color: #cfe5ff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.jidanao-login-welcome {
+  margin-top: 78px;
+}
+
+.jidanao-login-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #e7f4ff;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.jidanao-login-welcome h1 {
+  max-width: 480px;
+  margin: 20px 0 16px;
+  font-size: clamp(38px, 3.5vw, 55px);
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+}
+
+.jidanao-login-welcome p {
+  max-width: 510px;
+  margin: 0;
+  color: #d9ebff;
+  font-size: 15px;
+  line-height: 1.72;
+}
+
+.jidanao-login-learning-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-top: auto;
+  padding: 17px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 36px rgba(0, 25, 84, 0.15);
+  backdrop-filter: blur(14px);
+}
+
+.jidanao-login-learning-card__icon {
+  display: grid;
+  width: 62px;
+  height: 62px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #ffd760, #ffb82d);
+  color: #0a438f;
+  box-shadow: 0 12px 25px rgba(0, 30, 88, 0.22);
+}
+
+.jidanao-login-learning-card small,
+.jidanao-login-learning-card strong {
+  display: block;
+}
+
+.jidanao-login-learning-card small {
+  color: #cfe6ff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.jidanao-login-learning-card strong {
+  margin-top: 5px;
+  font-size: 15px;
+}
+
+.jidanao-login-learning-card__badge {
+  margin-left: auto;
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: #fff3c1;
+  color: #895600;
+  font-size: 10px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.jidanao-login-benefits {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.jidanao-login-benefits > div {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  background: rgba(4, 42, 118, 0.2);
+}
+
+.jidanao-login-benefits strong,
+.jidanao-login-benefits small {
+  display: block;
+}
+
+.jidanao-login-benefits strong {
+  font-size: 11px;
+}
+
+.jidanao-login-benefits small {
+  margin-top: 3px;
+  color: #cce3ff;
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.jidanao-login-form-panel {
+  display: grid;
+  place-items: center;
+  padding: 70px clamp(44px, 5vw, 88px);
+  background:
+    radial-gradient(circle at 90% 10%, rgba(34, 121, 237, 0.07), transparent 28%),
+    rgba(255, 255, 255, 0.92);
+}
+
+.jidanao-login-form {
+  display: grid;
+  width: min(470px, 100%);
+  gap: 0;
+}
+
+.jidanao-login-mobile-brand {
+  display: none;
+}
+
+.jidanao-login-form__header {
+  margin-bottom: 30px;
+}
+
+.jidanao-login-form__kicker {
+  color: var(--login-blue);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.jidanao-login-form__header h2 {
+  margin: 9px 0 9px;
+  color: var(--login-navy);
+  font-size: clamp(31px, 3vw, 42px);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.jidanao-login-form__header p {
+  margin: 0;
+  color: var(--login-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.jidanao-login-alert {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border: 1px solid;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.jidanao-login-alert--info {
+  border-color: #bdd9ff;
+  background: #edf6ff;
+  color: #18549f;
+}
+
+.jidanao-login-alert--error {
+  border-color: #ffcaca;
+  background: #fff1f1;
+  color: #a82727;
+}
+
+.jidanao-login-fields {
+  display: grid;
+  gap: 20px;
+}
+
+.jidanao-login-field {
+  display: grid;
+  gap: 9px;
+  color: #1c2f4d;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.jidanao-login-input {
+  display: flex;
+  min-height: 58px;
+  align-items: center;
+  gap: 11px;
+  padding: 0 16px;
+  border: 1px solid var(--login-line);
+  border-radius: 14px;
+  background: #fbfdff;
+  color: #74839b;
+  box-shadow: 0 7px 16px rgba(34, 63, 104, 0.035);
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.jidanao-login-input:focus-within {
+  border-color: #4f91ed;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(34, 112, 225, 0.11), 0 8px 22px rgba(34, 63, 104, 0.06);
+}
+
+.jidanao-login-input input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--login-navy);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.jidanao-login-input input::placeholder {
+  color: #9aa7ba;
+  font-weight: 500;
+}
+
+.jidanao-password-toggle {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #5d7292;
+  transition: background 180ms ease, color 180ms ease;
+}
+
+.jidanao-password-toggle:hover {
+  background: #eaf2ff;
+  color: var(--login-blue);
+}
+
+.jidanao-login-submit {
+  display: inline-flex;
+  min-height: 56px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 26px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1f72ea, #0b53ce);
+  box-shadow: 0 14px 28px rgba(20, 91, 215, 0.24);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.01em;
+  transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
+}
+
+.jidanao-login-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(20, 91, 215, 0.32);
+  filter: saturate(1.08);
+}
+
+.jidanao-login-submit:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
+.jidanao-login-support {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 17px;
+  color: #78869a;
+  font-size: 10px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.jidanao-login-support svg {
+  flex: 0 0 auto;
+  color: #2a74da;
+}
+
+.jidanao-login-register {
+  margin: 34px 0 0;
+  padding-top: 24px;
+  border-top: 1px solid #e4ebf4;
+  color: #718099;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.jidanao-login-register a {
+  color: var(--login-blue);
+  font-weight: 900;
+}
+
+.jidanao-login-register a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 1040px) {
+  .jidanao-login-page {
+    padding: 88px 24px 28px;
+  }
+
+  .jidanao-login-shell {
+    grid-template-columns: minmax(330px, 0.82fr) minmax(430px, 1.18fr);
+    min-height: 650px;
+  }
+
+  .jidanao-login-showcase {
+    padding: 38px 34px 32px;
+  }
+
+  .jidanao-login-welcome {
+    margin-top: 58px;
+  }
+
+  .jidanao-login-welcome h1 {
+    font-size: 39px;
+  }
+
+  .jidanao-login-benefits {
+    grid-template-columns: 1fr;
+  }
+
+  .jidanao-login-benefits > div:last-child {
+    display: none;
+  }
+
+  .jidanao-login-form-panel {
+    padding: 54px 42px;
+  }
+}
+
+@media (max-width: 760px) {
+  .jidanao-login-page {
+    display: block;
+    min-height: 100vh;
+    padding: 78px 16px 24px;
+  }
+
+  .jidanao-login-back {
+    top: 20px;
+    left: 18px;
+  }
+
+  .jidanao-login-shell {
+    display: block;
+    width: min(520px, 100%);
+    min-height: 0;
+    margin: 0 auto;
+    border-radius: 24px;
+  }
+
+  .jidanao-login-showcase {
+    display: none;
+  }
+
+  .jidanao-login-form-panel {
+    min-height: 0;
+    padding: 31px 25px 30px;
+  }
+
+  .jidanao-login-mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+    color: #163c78;
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .jidanao-login-mobile-brand img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 7px 18px rgba(20, 91, 215, 0.17);
+  }
+
+  .jidanao-login-form__header {
+    margin-bottom: 25px;
+  }
+
+  .jidanao-login-form__header h2 {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 420px) {
+  .jidanao-login-page {
+    padding-right: 10px;
+    padding-left: 10px;
+  }
+
+  .jidanao-login-back {
+    left: 12px;
+  }
+
+  .jidanao-login-form-panel {
+    padding: 27px 18px 25px;
+  }
+
+  .jidanao-login-input {
+    min-height: 54px;
+    padding-right: 10px;
+    padding-left: 13px;
+  }
+
+  .jidanao-login-register {
+    margin-top: 27px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jidanao-login-back,
+  .jidanao-login-submit,
+  .jidanao-login-input,
+  .jidanao-password-toggle {
+    transition: none;
+  }
+}
