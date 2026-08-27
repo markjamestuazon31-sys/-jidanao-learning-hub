@@ -52,6 +52,8 @@ async function readStudentRow(uid) {
   const photo = photoSnapshot?.exists?.() ? photoSnapshot.val() : {};
   return {
     uid,
+    source: "account",
+    accountType: "Student account",
     name: String(value.name || "").trim().slice(0, 120),
     email: String(value.email || "").trim().slice(0, 254),
     gradeLevel: normalizeGradeLevel(value.gradeLevel),
@@ -64,14 +66,73 @@ async function readStudentRow(uid) {
   };
 }
 
-async function readDirectory() {
+function sharedLearnerRows(classKey, node, viewer) {
+  return Object.entries(node || {}).map(([id, value]) => ({
+    uid: id,
+    id,
+    source: "shared-device",
+    accountType: "Shared-device learner",
+    name: String(value?.name || "").trim().slice(0, 120),
+    email: "",
+    learnerNumber: String(value?.learnerNumber || "").trim().slice(0, 40),
+    gradeLevel: normalizeGradeLevel(value?.gradeLevel || value?.grade),
+    section: normalizeSection(value?.section, "Unassigned section"),
+    classKey: value?.classKey || classKey,
+    status: value?.status === "archived" ? "archived" : "active",
+    createdAt: Number(value?.createdAt || 0) || null,
+    createdBy: String(value?.createdBy || ""),
+    createdByName: String(value?.createdByName || "Teacher").trim().slice(0, 120),
+    photoDataUrl: "",
+    photoUpdatedAt: null,
+    progress: {
+      level: 1,
+      totalXp: 0,
+      lessonsCompleted: 0,
+      gameSessions: 0,
+      accuracyPercent: 0,
+    },
+  })).filter((student) => (
+    student.name
+    && student.classKey
+    && (viewer.role === "admin" || (student.status === "active" && teacherCanAccessClass(viewer, student.gradeLevel, student.section)))
+  ));
+}
+
+async function readSharedLearners(viewer) {
+  try {
+    if (viewer.role === "admin" || viewer.teachingScope === "schoolwide") {
+      const snapshot = await get(ref(database, "classLearners"));
+      if (!snapshot.exists()) return [];
+      return Object.entries(snapshot.val()).flatMap(([classKey, node]) => sharedLearnerRows(classKey, node, viewer));
+    }
+    const classes = Object.keys(normalizeAssignedClasses(viewer.assignedClasses, viewer));
+    const snapshots = await Promise.all(classes.map(async (classKey) => ({
+      classKey,
+      snapshot: await get(ref(database, `classLearners/${classKey}`)),
+    })));
+    return snapshots.flatMap(({ classKey, snapshot }) => (
+      snapshot.exists() ? sharedLearnerRows(classKey, snapshot.val(), viewer) : []
+    ));
+  } catch (error) {
+    const message = `${error?.code || ""} ${error?.message || ""}`.toLowerCase();
+    if (message.includes("permission-denied") || message.includes("permission denied")) {
+      console.warn("Shared-device learner rules are not deployed yet; showing registered accounts only.");
+      return [];
+    }
+    throw error;
+  }
+}
+
+async function readDirectory({ includeSharedDevice = false } = {}) {
   const viewer = await readStaffViewer();
   const uids = await studentUidsForViewer(viewer);
-  const students = (await Promise.all(uids.map(readStudentRow)))
+  const accountStudents = (await Promise.all(uids.map(readStudentRow)))
     .filter(Boolean)
     .filter((student) => viewer.role === "admin" || teacherCanAccessClass(viewer, student.gradeLevel, student.section));
+  const sharedStudents = includeSharedDevice ? await readSharedLearners(viewer) : [];
+  const students = [...accountStudents, ...sharedStudents];
 
-  const progressRows = await Promise.all(students.map(async (student) => {
+  const progressRows = await Promise.all(accountStudents.map(async (student) => {
     try {
       const snapshot = await get(ref(database, `progress/${student.uid}`));
       return [student.uid, normalizeProgress(snapshot.exists() ? snapshot.val() : {})];
@@ -81,23 +142,26 @@ async function readDirectory() {
   }));
   const progressByUid = Object.fromEntries(progressRows);
   return students
-    .map((student) => ({
-      ...student,
-      progress: {
-        level: progressByUid[student.uid].summary.level,
-        totalXp: progressByUid[student.uid].summary.totalXp,
-        lessonsCompleted: progressByUid[student.uid].summary.lessonsCompleted,
-        gameSessions: progressByUid[student.uid].summary.gameSessions,
-        accuracyPercent: progressByUid[student.uid].summary.accuracyPercent,
-      },
-    }))
+    .map((student) => {
+      const progress = progressByUid[student.uid] || normalizeProgress({});
+      return {
+        ...student,
+        progress: {
+          level: progress.summary.level,
+          totalXp: progress.summary.totalXp,
+          lessonsCompleted: progress.summary.lessonsCompleted,
+          gameSessions: progress.summary.gameSessions,
+          accuracyPercent: progress.summary.accuracyPercent,
+        },
+      };
+    })
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export async function getTeacherStudentDirectory() {
-  return readDirectory();
+export async function getTeacherStudentDirectory(options = {}) {
+  return readDirectory(options);
 }
 
 export async function getAdminStudentDirectory() {
-  return readDirectory();
+  return readDirectory({ includeSharedDevice: true });
 }

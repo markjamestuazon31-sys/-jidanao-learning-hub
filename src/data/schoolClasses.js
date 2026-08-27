@@ -34,7 +34,13 @@ function defaultGradeDefinitions() {
     order: gradeIndex + 1,
     active: true,
     published: true,
-    sections: [],
+    sections: SECTIONS.map((section, sectionIndex) => ({
+      key: sectionToKey(section),
+      name: section,
+      order: sectionIndex + 1,
+      active: true,
+      published: true,
+    })),
   }));
 }
 
@@ -92,6 +98,22 @@ export function normalizeSchoolStructure(value, { fallback = true } = {}) {
     return normalizeSchoolStructure(DEFAULT_SCHOOL_STRUCTURE, { fallback: false });
   }
   return { version: Number(value?.version || 1), grades };
+}
+
+export function ensureCoreGradeStructure(value) {
+  const normalized = normalizeSchoolStructure(value, { fallback: false });
+  const defaults = normalizeSchoolStructure(DEFAULT_SCHOOL_STRUCTURE, { fallback: false });
+  const grades = defaults.grades.map((defaultGrade) => {
+    const existing = normalized.grades.find((grade) => grade.key === defaultGrade.key || grade.name === defaultGrade.name);
+    if (!existing) return defaultGrade;
+    return {
+      ...existing,
+      active: true,
+      published: true,
+      sections: existing.sections.length ? existing.sections : defaultGrade.sections,
+    };
+  });
+  return { version: Math.max(1, Number(normalized.version || 1)), grades };
 }
 
 export function schoolStructureRecord(value) {

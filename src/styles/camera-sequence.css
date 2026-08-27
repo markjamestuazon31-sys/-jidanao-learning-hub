@@ -1,0 +1,34 @@
+.camera-sequence-stage { overflow: hidden; border: 1px solid #b8d3f4; border-radius: 18px; background: #fff; box-shadow: 0 16px 36px rgba(20, 73, 143, .12); }
+.camera-sequence-toolbar { min-height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 13px 18px; color: #123765; background: #f5f9ff; border-bottom: 1px solid #dbe8f8; }
+.camera-sequence-toolbar > div { min-width: 0; display: grid; gap: 4px; }
+.camera-sequence-toolbar span { display: flex; align-items: center; gap: 7px; color: #5e6f88; font-size: 11px; font-weight: 900; letter-spacing: .07em; }
+.camera-sequence-toolbar span i { width: 9px; height: 9px; border-radius: 50%; background: #9aa8ba; }
+.camera-sequence-toolbar span.is-live { color: #087958; }
+.camera-sequence-toolbar span.is-live i { background: #11a872; box-shadow: 0 0 0 5px rgba(17, 168, 114, .13); }
+.camera-sequence-toolbar p { overflow: hidden; margin: 0; color: #334a6b; font-size: 13px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+.camera-sequence-toolbar button, .camera-sequence-steps button { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 0 13px; border: 1px solid #bcd1ee; border-radius: 10px; color: #1558b4; background: #fff; font-weight: 850; cursor: pointer; }
+.camera-sequence-steps { display: grid; grid-template-columns: repeat(3, 1fr) auto; gap: 8px; align-items: center; padding: 10px 16px; background: #0b4ca8; }
+.camera-sequence-steps span { display: flex; align-items: center; justify-content: center; gap: 7px; color: #fff; font-size: 12px; font-weight: 850; }
+.camera-sequence-steps span b { width: 23px; height: 23px; display: grid; place-items: center; border-radius: 50%; color: #07356f; background: #ffd539; }
+.camera-sequence-steps button { min-height: 34px; border-color: rgba(255,255,255,.38); color: #fff; background: rgba(255,255,255,.13); }
+.camera-sequence-viewport { position: relative; min-height: 540px; overflow: hidden; background: linear-gradient(180deg, rgba(5, 25, 54, .12), rgba(5, 25, 54, .22)), #dceafb; }
+.camera-sequence-viewport video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+.camera-sequence-camera-off { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 8px; padding: 28px; color: #24476f; background: linear-gradient(145deg, #e8f2ff, #f7fbff); text-align: center; }
+.camera-sequence-camera-off p { max-width: 560px; margin: 0; color: #647994; font-size: 13px; }
+.camera-sequence-hand-guide { position: absolute; z-index: 2; top: 16px; left: 50%; display: flex; align-items: center; gap: 8px; transform: translateX(-50%); padding: 9px 13px; border-radius: 999px; color: #fff; background: rgba(7, 45, 94, .82); font-size: 12px; font-weight: 850; }
+.camera-sequence-block { position: absolute; z-index: 4; min-width: 125px; max-width: 220px; min-height: 70px; display: grid; grid-template-columns: 26px minmax(0, 1fr) 17px; align-items: center; gap: 8px; transform: translate(-50%, -50%); padding: 10px; border: 3px solid #fff; border-radius: 18px; color: #11335f; background: #fff; box-shadow: 0 12px 26px rgba(3, 27, 62, .3); cursor: grab; }
+.camera-sequence-block small { width: 25px; height: 25px; display: grid; place-items: center; border-radius: 8px; color: #fff; background: #1264ca; font-weight: 900; }
+.camera-sequence-block strong { overflow-wrap: anywhere; font-size: clamp(15px, 1.7vw, 24px); line-height: 1.1; }
+.camera-sequence-block.tone-2 small { background: #8c48c6; }.camera-sequence-block.tone-3 small { background: #0a8b6a; }.camera-sequence-block.tone-4 small { color: #493800; background: #ffd230; }
+.camera-sequence-block.is-hovered { outline: 7px solid rgba(255, 213, 57, .45); transform: translate(-50%, -50%) scale(1.05); }
+.camera-sequence-block.is-grabbed { z-index: 8; transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 18px 35px rgba(3, 27, 62, .42); }
+.camera-sequence-drop { position: absolute; z-index: 3; left: 18%; right: 18%; bottom: 7%; min-height: 132px; display: grid; place-items: center; gap: 5px; padding: 14px; border: 4px dashed rgba(255,255,255,.92); border-radius: 24px; color: #fff; background: rgba(7, 52, 111, .83); box-shadow: 0 15px 35px rgba(2, 22, 51, .28); }
+.camera-sequence-drop.is-ready { color: #12335c; background: rgba(255, 214, 50, .95); transform: scale(1.02); }
+.camera-sequence-drop > strong { font-size: clamp(15px, 2vw, 23px); letter-spacing: .05em; }
+.camera-sequence-drop > div { display: flex; flex-wrap: wrap; justify-content: center; gap: 7px; }
+.camera-sequence-drop div span { display: inline-flex; align-items: center; gap: 5px; padding: 6px 9px; border-radius: 9px; color: #12335c; background: #fff; font-weight: 850; }
+.camera-sequence-drop div span b { color: #1c68c7; }.camera-sequence-drop em { font-size: 12px; font-style: normal; opacity: .84; }
+.camera-sequence-cursor { position: absolute; z-index: 10; width: 46px; height: 46px; display: grid; place-items: center; transform: translate(-50%, -50%); border: 3px solid #fff; border-radius: 50%; color: #fff; background: #1374dc; pointer-events: none; box-shadow: 0 8px 20px rgba(0,0,0,.3); }
+.camera-sequence-cursor.is-pinching { color: #503c00; background: #ffd333; }
+.camera-sequence-privacy { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 16px; color: #526b89; background: #f6f9fd; font-size: 11px; font-weight: 750; text-align: center; }
+@media (max-width: 760px) { .camera-sequence-steps { grid-template-columns: 1fr; }.camera-sequence-steps span { justify-content: flex-start; }.camera-sequence-viewport { min-height: 610px; }.camera-sequence-block { min-width: 105px; max-width: 150px; }.camera-sequence-drop { left: 7%; right: 7%; }.camera-sequence-toolbar { align-items: flex-start; flex-direction: column; }.camera-sequence-toolbar p { white-space: normal; } }

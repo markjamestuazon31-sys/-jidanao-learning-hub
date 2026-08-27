@@ -51,6 +51,37 @@
 }
 .teacher-attendance-class-switcher{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:16px;margin-bottom:12px;padding:14px 16px;border:1px solid #cfe5e0;border-radius:15px;background:#fff;box-shadow:0 7px 22px rgba(22,77,70,.055)}.teacher-attendance-class-switcher>div:first-child{display:flex;align-items:center;gap:9px;color:#078273}.teacher-attendance-class-switcher>div:first-child span{display:grid}.teacher-attendance-class-switcher>div:first-child strong{color:#243b49;font-size:11px}.teacher-attendance-class-switcher>div:first-child small{color:#71868a;font-size:8px}.teacher-attendance-class-switcher>div:last-child{display:flex;flex-wrap:wrap;gap:7px}.teacher-attendance-class-switcher button{min-width:108px;display:grid;gap:2px;padding:9px 12px;border:1px solid #d4e3e0;border-radius:10px;color:#3b6761;background:#f7fbfa;text-align:left}.teacher-attendance-class-switcher button strong{font-size:10px}.teacher-attendance-class-switcher button small{font-size:8px}.teacher-attendance-class-switcher button.is-active{border-color:#078b79;color:#fff;background:linear-gradient(135deg,#079783,#087566);box-shadow:0 7px 16px rgba(5,126,109,.2)}@media(max-width:700px){.teacher-attendance-class-switcher{grid-template-columns:1fr}}
 
+.teacher-attendance-view-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  padding: 7px;
+  border: 1px solid #d5e2ef;
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 8px 22px rgba(22, 57, 101, .06);
+}
+
+.teacher-attendance-view-tabs button {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 10px;
+  color: #57718d;
+  background: #f4f7fb;
+  text-align: left;
+}
+
+.teacher-attendance-view-tabs button > span { display: grid; gap: 2px; }
+.teacher-attendance-view-tabs button strong { font-size: 13px; }
+.teacher-attendance-view-tabs button small { font-size: 10px; font-weight: 600; }
+.teacher-attendance-view-tabs button.is-active { color: #fff; background: linear-gradient(135deg, #0750aa, #0786c9); box-shadow: 0 8px 18px rgba(7, 102, 178, .2); }
+.teacher-attendance-view-tabs button.is-active small { color: #d9efff; }
+
 .teacher-attendance-filters > label { display: grid; gap: 5px; color: #4d5b72; font-size: 9px; font-weight: 850; }
 .teacher-attendance-filters select,
 .teacher-attendance-filters > label > input,
@@ -128,6 +159,20 @@
 .teacher-attendance-month-summary .is-late { color: #a66300; background: #fff1d5; }
 .teacher-attendance-month-summary .is-excused { color: #5b42bc; background: #eee9ff; }
 
+.teacher-attendance-tracking .teacher-attendance-heading > div:first-child > span { color: #145fba; background: #e7f1ff; }
+.teacher-attendance-tracking-table { min-width: 960px !important; }
+.teacher-attendance-tracking-table th:not(:first-child),
+.teacher-attendance-tracking-table td:not(:first-child) { text-align: center; }
+.attendance-tracking-count { min-width: 38px; display: inline-flex; justify-content: center; padding: 7px 9px; border-radius: 8px; font-weight: 900; }
+.attendance-tracking-count.is-present { color: #08794f; background: #e3f8ed; }
+.attendance-tracking-count.is-absent { color: #b9323f; background: #ffeaec; }
+.attendance-tracking-count.is-late { color: #a66300; background: #fff1d5; }
+.attendance-tracking-count.is-excused { color: #5b42bc; background: #eee9ff; }
+.attendance-tracking-rate { min-width: 150px; display: flex; align-items: center; justify-content: center; gap: 9px; }
+.attendance-tracking-rate > span { width: 95px; height: 8px; overflow: hidden; border-radius: 99px; background: #dce7f2; }
+.attendance-tracking-rate i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #0a68c7, #14a080); }
+.attendance-tracking-rate strong { min-width: 38px; color: #23486f; }
+
 .teacher-attendance-dashboard-cta {
   display: flex;
   gap: 14px;
@@ -163,6 +208,7 @@
   .teacher-attendance-heading > div:last-child { align-items: stretch; flex-direction: column; }
   .teacher-attendance-heading > div:last-child > label { width: 100%; }
   .teacher-attendance-register { padding: 14px; }
+  .teacher-attendance-view-tabs { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 430px) {

@@ -30,6 +30,7 @@ import {
   CAMERA_LEVELS,
   CAMERA_LEVEL_FOCUS,
   CAMERA_TRACKS,
+  cameraItemIsComplete,
   createEmptyCameraItems,
   getTeacherCameraPrograms,
   importCameraItemsFromText,
@@ -52,15 +53,15 @@ function newForm(classOption) {
   };
 }
 
-function itemIsComplete(item, track) {
-  if (track === "english") {
-    return String(item?.readingText || "").trim().split(/\s+/).filter(Boolean).length >= 3
-      && Boolean(String(item?.coachingTip || "").trim());
-  }
-  const choices = Array.isArray(item?.choices) ? item.choices : [];
-  return Boolean(item?.prompt && item?.answer && item?.explanation && choices.length === 4 && choices.every(Boolean)
-    && choices.some((choice) => String(choice).trim().toLowerCase() === String(item.answer).trim().toLowerCase()));
-}
+const TRACK_ICONS = Object.freeze({
+  math: Gamepad2,
+  english: BookOpenCheck,
+  sort: Layers3,
+  sentence: ClipboardCheck,
+  spelling: Sparkles,
+  picture: Camera,
+  truefalse: Target,
+});
 
 export default function TeacherCameraStudio() {
   const { profile } = useAuth();
@@ -133,7 +134,7 @@ export default function TeacherCameraStudio() {
   }, [form.grade, form.level, form.section, form.track, selectedProgram]);
 
   const validation = useMemo(() => validateCameraItems(form.questions, form.track), [form.questions, form.track]);
-  const completedItems = useMemo(() => form.questions.filter((item) => itemIsComplete(item, form.track)).length, [form.questions, form.track]);
+  const completedItems = useMemo(() => form.questions.filter((item) => cameraItemIsComplete(item, form.track)).length, [form.questions, form.track]);
   const scopedPrograms = useMemo(() => programs.filter((program) =>
     program.grade === form.grade && program.section === form.section && program.track === form.track,
   ), [form.grade, form.section, form.track, programs]);
@@ -212,7 +213,8 @@ export default function TeacherCameraStudio() {
   const classKey = classes.find((item) => item.grade === form.grade && item.section === form.section)?.key || "";
   const activeItemIndex = Math.max(0, Math.min(expandedItem, form.questions.length - 1));
   const activeItem = form.questions[activeItemIndex];
-  const activeItemComplete = itemIsComplete(activeItem, form.track);
+  const activeItemComplete = cameraItemIsComplete(activeItem, form.track);
+  const trackMeta = CAMERA_TRACKS[form.track];
   const liveLevelCount = scopedPrograms.filter((item) => item.status === "published").length;
 
   function toggleSetupStep(step) {
@@ -238,7 +240,7 @@ export default function TeacherCameraStudio() {
           <div>
             <small>CURRENT WORKSPACE</small>
             <strong>{form.grade && form.section ? `${form.grade} · ${form.section}` : "Choose a class"}</strong>
-            <span>{CAMERA_TRACKS[form.track].label} · Level {form.level}<br />Math mission: {week.label}</span>
+            <span>{trackMeta.label} · Level {form.level}<br />{form.track === "math" ? `Math mission: ${week.label}` : trackMeta.shortDescription}</span>
           </div>
         </aside>
       </header>
@@ -284,8 +286,10 @@ export default function TeacherCameraStudio() {
 
             {openSetupStep === 2 && (
               <div className="teacher-camera-track-tabs teacher-camera-track-tabs--drawer" role="group" aria-label="Camera learning track">
-                <button type="button" className={form.track === "math" ? "is-active" : ""} onClick={() => selectTrack("math")}><Gamepad2 size={20} /><span><strong>Camera Math</strong><small>Problems, choices, and worked solutions</small></span>{form.track === "math" && <CheckCircle2 size={17} />}</button>
-                <button type="button" className={form.track === "english" ? "is-active" : ""} onClick={() => selectTrack("english")}><BookOpenCheck size={20} /><span><strong>English Reading</strong><small>Passages, accuracy, and coaching</small></span>{form.track === "english" && <CheckCircle2 size={17} />}</button>
+                {Object.values(CAMERA_TRACKS).map((track) => {
+                  const TrackIcon = TRACK_ICONS[track.id] || Camera;
+                  return <button type="button" key={track.id} className={form.track === track.id ? "is-active" : ""} onClick={() => selectTrack(track.id)}><TrackIcon size={20} /><span><strong>{track.label}</strong><small>{track.shortDescription}</small></span>{form.track === track.id && <CheckCircle2 size={17} />}</button>;
+                })}
                 <button type="button" className="teacher-camera-drawer-next" onClick={() => setOpenSetupStep(3)}>Continue to level <ArrowRight size={17} /></button>
               </div>
             )}
@@ -318,7 +322,7 @@ export default function TeacherCameraStudio() {
             </div>
           </div>
 
-          <div className="teacher-camera-level-focus"><Sparkles size={19} /><div><span>RECOMMENDED LEVEL {form.level} PROGRESSION</span><strong>{CAMERA_LEVEL_FOCUS[form.track][form.level - 1]}</strong><small>Use new problems or passages at every level. Jidanao blocks repeated teacher content across the same learning track.</small></div></div>
+          <div className="teacher-camera-level-focus"><Sparkles size={19} /><div><span>RECOMMENDED LEVEL {form.level} PROGRESSION</span><strong>{CAMERA_LEVEL_FOCUS[form.track][form.level - 1]}</strong><small>Use new learning content at every level. Jidanao blocks repeated teacher content within the same track.</small></div></div>
 
           <section className="teacher-camera-form-section">
             <div className="teacher-camera-section-heading"><span><Layers3 size={20} /></span><div><small>PART A</small><h3>Describe the learning level</h3><p>Give students a clear title, learning goal, and short instructions.</p></div></div>
@@ -334,7 +338,7 @@ export default function TeacherCameraStudio() {
             <label className="teacher-camera-import">
               <input ref={fileRef} type="file" accept=".docx,.pdf,.txt,.md,.csv,.json,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" onChange={(event) => void importDocument(event.target.files?.[0])} />
               {importing ? <LoaderCircle size={23} className="spin" /> : <FileUp size={23} />}
-              <span><strong>{importing ? "Reading document…" : "Import DOCX or PDF to fill all 10 activities"}</strong><small>{form.track === "math" ? "Use: problem | answer | A | B | C | D | solution" : "The first 10 complete reading passages will be prepared for review"}</small></span>
+              <span><strong>{importing ? "Reading document…" : "Import DOCX or PDF to fill all 10 activities"}</strong><small>{trackMeta.kind === "reading" ? trackMeta.importHint : `Use: ${trackMeta.importHint}`}</small></span>
               <b>{importing ? "Please wait" : "Choose document"}</b>
             </label>
 
@@ -342,7 +346,7 @@ export default function TeacherCameraStudio() {
               <div><strong>Activity progress</strong><span>Select a number to edit that activity.</span></div>
               <nav aria-label="Select an activity">
                 {form.questions.map((item, index) => {
-                  const complete = itemIsComplete(item, form.track);
+                  const complete = cameraItemIsComplete(item, form.track);
                   return <button type="button" key={`activity-nav-${index + 1}`} className={`${activeItemIndex === index ? "is-active" : ""} ${complete ? "is-complete" : ""}`} onClick={() => setExpandedItem(index)} aria-label={`Edit activity ${index + 1}${complete ? ", ready" : ""}`}>{complete ? <CheckCircle2 size={17} /> : index + 1}</button>;
                 })}
               </nav>
@@ -351,9 +355,9 @@ export default function TeacherCameraStudio() {
             <article className={`teacher-camera-active-item ${activeItemComplete ? "is-complete" : ""}`}>
               <header>
                 <span>{activeItemComplete ? <CheckCircle2 size={20} /> : activeItemIndex + 1}</span>
-                <div><small>ACTIVITY {activeItemIndex + 1} OF 10</small><h3>{form.track === "english" ? "Reading passage and coaching" : "Math problem and answer choices"}</h3><p>{activeItemComplete ? "This activity is complete and ready for review." : "Complete every required field before moving to publishing."}</p></div>
+                <div><small>ACTIVITY {activeItemIndex + 1} OF 10</small><h3>{trackMeta.kind === "reading" ? "Reading passage and coaching" : `${trackMeta.label} content`}</h3><p>{activeItemComplete ? "This activity is complete and ready for review." : "Complete every required field before moving to publishing."}</p></div>
               </header>
-              {form.track === "english" ? (
+              {trackMeta.kind === "reading" ? (
                 <div className="teacher-camera-item__form">
                   <label className="span-2">Passage or sentence<textarea rows={4} value={activeItem.readingText} onChange={(event) => updateItem(activeItemIndex, "readingText", event.target.value)} placeholder="Enter the exact English text the student must read aloud." /></label>
                   <label>Reading skill<input value={activeItem.skill} onChange={(event) => updateItem(activeItemIndex, "skill", event.target.value)} placeholder="Fluency, phrasing, vocabulary…" /></label>
@@ -362,11 +366,16 @@ export default function TeacherCameraStudio() {
                 </div>
               ) : (
                 <div className="teacher-camera-item__form">
-                  <label className="span-2">Problem or question<textarea rows={3} value={activeItem.prompt} onChange={(event) => updateItem(activeItemIndex, "prompt", event.target.value)} placeholder="Example: Mia has 4 boxes with 6 pencils each. How many pencils?" /></label>
-                  <label>Correct answer<input value={activeItem.answer} onChange={(event) => updateItem(activeItemIndex, "answer", event.target.value)} placeholder="24" /></label>
-                  <label>Skill<input value={activeItem.skill} onChange={(event) => updateItem(activeItemIndex, "skill", event.target.value)} placeholder="Multiplication word problem" /></label>
-                  <div className="teacher-camera-choices span-2">{activeItem.choices.map((choice, choiceIndex) => <label key={choiceIndex}><span>{String.fromCharCode(65 + choiceIndex)}</span><input value={choice} onChange={(event) => updateItem(activeItemIndex, "choice", event.target.value, choiceIndex)} placeholder={`Choice ${String.fromCharCode(65 + choiceIndex)}`} /></label>)}</div>
-                  <label className="span-2">Worked solution / feedback<textarea rows={3} value={activeItem.explanation} onChange={(event) => updateItem(activeItemIndex, "explanation", event.target.value)} placeholder="Explain why the answer is correct in student-friendly language." /></label>
+                  <label className="span-2">{trackMeta.questionLabel}<textarea rows={3} value={activeItem.prompt} onChange={(event) => updateItem(activeItemIndex, "prompt", event.target.value)} placeholder={trackMeta.questionPlaceholder} /></label>
+                  <label>{trackMeta.answerLabel}{trackMeta.kind === "boolean"
+                    ? <select value={activeItem.answer} onChange={(event) => updateItem(activeItemIndex, "answer", event.target.value)}><option value="">Choose answer</option><option value="True">True</option><option value="False">False</option></select>
+                    : <input value={activeItem.answer} onChange={(event) => updateItem(activeItemIndex, "answer", event.target.value)} placeholder={trackMeta.answerPlaceholder} />}</label>
+                  <label>Skill<input value={activeItem.skill} onChange={(event) => updateItem(activeItemIndex, "skill", event.target.value)} placeholder={trackMeta.kind === "sequence" ? "Word order, grammar, spelling…" : "Name the learning skill"} /></label>
+                  <div className={`teacher-camera-choices span-2 ${trackMeta.kind === "sequence" ? "is-sequence" : ""}`}>
+                    <div className="teacher-camera-choices__guide"><strong>{trackMeta.kind === "sequence" ? "Enter blocks in the correct order" : `${trackMeta.choiceLabel}s`}</strong><span>{trackMeta.kind === "sequence" ? "The game will shuffle these blocks for the learner." : "The learner will pinch and drag one of these choices."}</span></div>
+                    {activeItem.choices.map((choice, choiceIndex) => <label key={choiceIndex}><span>{trackMeta.kind === "sequence" ? choiceIndex + 1 : String.fromCharCode(65 + choiceIndex)}</span><input value={choice} disabled={trackMeta.kind === "boolean"} onChange={(event) => updateItem(activeItemIndex, "choice", event.target.value, choiceIndex)} placeholder={`${trackMeta.choiceLabel} ${choiceIndex + 1}`} /></label>)}
+                  </div>
+                  <label className="span-2">{trackMeta.explanationLabel}<textarea rows={3} value={activeItem.explanation} onChange={(event) => updateItem(activeItemIndex, "explanation", event.target.value)} placeholder={trackMeta.explanationPlaceholder} /></label>
                 </div>
               )}
               <footer>

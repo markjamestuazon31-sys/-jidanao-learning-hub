@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   GraduationCap,
   Mail,
+  MonitorPlay,
   RefreshCw,
   Search,
   UserCheck,
@@ -13,6 +14,7 @@ import { useSchoolStructure } from "../context/SchoolStructureContext";
 import { activeGradeOptions, allSectionNames, normalizeSection, sectionsForGrade } from "../data/schoolClasses";
 import { normalizeGradeLevel, updateStudentClass, updateUserStatus } from "../services/dataService";
 import { getAdminStudentDirectory } from "../services/directoryService";
+import "../styles/teacher-game-zone.css";
 
 export default function AdminStudents() {
   const { structure } = useSchoolStructure();
@@ -21,6 +23,7 @@ export default function AdminStudents() {
   const [grade, setGrade] = useState("All Grades");
   const [section, setSection] = useState("All Sections");
   const [status, setStatus] = useState("All Statuses");
+  const [access, setAccess] = useState("All Access Types");
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("success");
@@ -55,9 +58,11 @@ export default function AdminStudents() {
       const matchesSection = section === "All Sections" || normalizeSection(student.section) === section;
       const studentStatus = student.status === "disabled" ? "Disabled" : "Active";
       const matchesStatus = status === "All Statuses" || studentStatus === status;
-      return matchesSearch && matchesGrade && matchesSection && matchesStatus;
+      const accessType = student.source === "shared-device" ? "Shared Device" : "Student Account";
+      const matchesAccess = access === "All Access Types" || accessType === access;
+      return matchesSearch && matchesGrade && matchesSection && matchesStatus && matchesAccess;
     });
-  }, [students, search, grade, section, status]);
+  }, [access, students, search, grade, section, status]);
 
   async function changeClass(student, gradeLevel, sectionLevel) {
     try {
@@ -139,6 +144,11 @@ export default function AdminStudents() {
             <option>Active</option>
             <option>Disabled</option>
           </select>
+          <select value={access} onChange={(e) => setAccess(e.target.value)}>
+            <option>All Access Types</option>
+            <option>Student Account</option>
+            <option>Shared Device</option>
+          </select>
         </div>
 
         <div className="admin-responsive-table">
@@ -148,6 +158,7 @@ export default function AdminStudents() {
                 <th>Learner</th>
                 <th>Grade level</th>
                 <th>Section</th>
+                <th>Access type</th>
                 <th>Status</th>
                 <th>Account created</th>
                 <th>Action</th>
@@ -165,39 +176,40 @@ export default function AdminStudents() {
                         size={42}
                         className="admin-avatar-photo"
                       />
-                      <div><strong>{student.name || "Unnamed learner"}</strong><small><Mail size={12} /> {student.email}</small></div>
+                      <div><strong>{student.name || "Unnamed learner"}</strong><small>{student.source === "shared-device" ? <><MonitorPlay size={12} /> Added by {student.createdByName || "teacher"}</> : <><Mail size={12} /> {student.email}</>}</small></div>
                     </div>
                   </td>
                   <td>
-                    <select
-                      className="admin-table-select"
-                      value={normalizeGradeLevel(student.gradeLevel) || gradeOptions[0]?.name || ""}
-                      onChange={(event) => {
-                        const nextSections = sectionsForGrade(structure, event.target.value);
-                        if (nextSections[0]) void changeClass(student, event.target.value, nextSections[0].name);
-                      }}
-                    >
-                      {!gradeOptions.some((item) => item.name === normalizeGradeLevel(student.gradeLevel)) && <option value={normalizeGradeLevel(student.gradeLevel)}>{normalizeGradeLevel(student.gradeLevel)} (inactive)</option>}
-                      {gradeOptions.map((item) => <option key={item.key} value={item.name}>{item.name}</option>)}
-                    </select>
+                    {student.source === "shared-device" ? <strong>{normalizeGradeLevel(student.gradeLevel)}</strong> : <select
+                        className="admin-table-select"
+                        value={normalizeGradeLevel(student.gradeLevel) || gradeOptions[0]?.name || ""}
+                        onChange={(event) => {
+                          const nextSections = sectionsForGrade(structure, event.target.value);
+                          if (nextSections[0]) void changeClass(student, event.target.value, nextSections[0].name);
+                        }}
+                      >
+                        {!gradeOptions.some((item) => item.name === normalizeGradeLevel(student.gradeLevel)) && <option value={normalizeGradeLevel(student.gradeLevel)}>{normalizeGradeLevel(student.gradeLevel)} (inactive)</option>}
+                        {gradeOptions.map((item) => <option key={item.key} value={item.name}>{item.name}</option>)}
+                      </select>}
                   </td>
                   <td>
-                    <select
-                      className="admin-table-select"
-                      value={normalizeSection(student.section)}
-                      onChange={(e) => changeClass(student, normalizeGradeLevel(student.gradeLevel), e.target.value)}
-                    >
-                      {!sectionsForGrade(structure, student.gradeLevel).some((item) => item.name === normalizeSection(student.section)) && <option value={normalizeSection(student.section)}>{normalizeSection(student.section)} (inactive)</option>}
-                      {sectionsForGrade(structure, student.gradeLevel).map((item) => <option key={item.key} value={item.name}>{item.name}</option>)}
-                    </select>
+                    {student.source === "shared-device" ? <strong>{normalizeSection(student.section)}</strong> : <select
+                        className="admin-table-select"
+                        value={normalizeSection(student.section)}
+                        onChange={(e) => changeClass(student, normalizeGradeLevel(student.gradeLevel), e.target.value)}
+                      >
+                        {!sectionsForGrade(structure, student.gradeLevel).some((item) => item.name === normalizeSection(student.section)) && <option value={normalizeSection(student.section)}>{normalizeSection(student.section)} (inactive)</option>}
+                        {sectionsForGrade(structure, student.gradeLevel).map((item) => <option key={item.key} value={item.name}>{item.name}</option>)}
+                      </select>}
                   </td>
+                  <td><span className={`admin-status-pill ${student.source === "shared-device" ? "shared-device" : "active"}`}>{student.source === "shared-device" ? "Shared device" : "LMS account"}</span></td>
                   <td><span className={`admin-status-pill ${student.status === "disabled" ? "disabled" : "active"}`}>{student.status === "disabled" ? "Disabled" : "Active"}</span></td>
                   <td>{student.createdAt ? new Date(student.createdAt).toLocaleDateString() : "—"}</td>
                   <td>
-                    <button type="button" className={`admin-text-button ${student.status === "disabled" ? "positive" : "danger"}`} onClick={() => toggleStatus(student)}>
-                      {student.status === "disabled" ? <UserCheck size={15} /> : <UserX size={15} />}
-                      {student.status === "disabled" ? "Activate" : "Disable"}
-                    </button>
+                    {student.source === "shared-device" ? <span className="admin-shared-device-note"><MonitorPlay size={14} /> Teacher-managed</span> : <button type="button" className={`admin-text-button ${student.status === "disabled" ? "positive" : "danger"}`} onClick={() => toggleStatus(student)}>
+                        {student.status === "disabled" ? <UserCheck size={15} /> : <UserX size={15} />}
+                        {student.status === "disabled" ? "Activate" : "Disable"}
+                      </button>}
                   </td>
                 </tr>
               ))}

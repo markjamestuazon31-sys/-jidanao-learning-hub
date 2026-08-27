@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { GraduationCap, Mail, RefreshCw, Search, ShieldCheck, Users } from "lucide-react";
+import { GraduationCap, Mail, MonitorPlay, RefreshCw, Search, ShieldCheck, Users } from "lucide-react";
 import ProfileAvatar from "../components/ProfileAvatar";
 import { useSchoolStructure } from "../context/SchoolStructureContext";
 import { activeGradeOptions, allSectionNames, normalizeSection } from "../data/schoolClasses";
@@ -21,7 +21,7 @@ export default function TeacherStudents() {
     setLoading(true);
     setError("");
     try {
-      setStudents(await getTeacherStudentDirectory());
+      setStudents(await getTeacherStudentDirectory({ includeSharedDevice: true }));
     } catch (loadError) {
       console.error("Unable to load teacher student directory:", loadError);
       setError(loadError.message || "Student profiles could not be loaded.");
@@ -109,7 +109,7 @@ export default function TeacherStudents() {
               />
               <div className="teacher-student-card__identity">
                 <strong>{student.name || "Unnamed learner"}</strong>
-                <span><Mail size={12} /> {student.email || "No email"}</span>
+                <span>{student.source === "shared-device" ? <><MonitorPlay size={12} /> Shared-device learner</> : <><Mail size={12} /> {student.email || "No email"}</>}</span>
               </div>
               <div className="teacher-student-card__meta">
                 <span>{normalizeGradeLevel(student.gradeLevel) || "Unassigned"} · {normalizeSection(student.section, "Unassigned section")}</span>

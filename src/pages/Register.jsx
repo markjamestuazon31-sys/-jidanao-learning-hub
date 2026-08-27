@@ -1,9 +1,11 @@
+import { CheckCircle2, GraduationCap, School2, ShieldCheck, UserRound } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useSchoolStructure } from "../context/SchoolStructureContext";
 import { activeGradeOptions, classLabel, sectionsForGrade } from "../data/schoolClasses";
 import { registerStudent } from "../services/authService";
+import "../styles/student-register.css";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -13,13 +15,18 @@ export default function Register() {
     name: "",
     email: "",
     password: "",
-    gradeLevel: "Grade 3",
-    section: "Section 1",
+    gradeLevel: "",
+    section: "",
   });
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const gradeOptions = useMemo(() => activeGradeOptions(structure), [structure]);
   const sectionOptions = useMemo(() => sectionsForGrade(structure, form.gradeLevel), [form.gradeLevel, structure]);
+
+  function chooseGrade(gradeName) {
+    const sections = sectionsForGrade(structure, gradeName);
+    setForm((current) => ({ ...current, gradeLevel: gradeName, section: sections[0]?.name || "" }));
+  }
 
   useEffect(() => {
     if (!gradeOptions.length) return;
@@ -62,28 +69,34 @@ export default function Register() {
   }
 
   return (
-    <div className="auth-page">
-      <form className="login-card wide" onSubmit={submit}>
-        <img
-          src="/jidanao-seal.png"
-          alt="Jidanao Elementary School logo"
-          className="auth-logo"
-        />
-        <div>
-          <h1>Create student account</h1>
-          <p>
-            Select an active grade and section configured by the school administrator.
-            The student role is assigned automatically and cannot be changed here.
-          </p>
+    <div className="student-register-page">
+      <aside className="student-register-intro">
+        <img src="/jidanao-seal.png" alt="Jidanao Elementary School logo" />
+        <span>JIDANAO ELEMENTARY SCHOOL</span>
+        <h1>Join your digital classroom</h1>
+        <p>Create a learner account for Grades 3–6. Your selected Grade and Section connect you to the correct teachers, lessons, quizzes, games, and attendance records.</p>
+        <div className="student-register-benefits">
+          <div><GraduationCap /><span><strong>Grades 3–6</strong><small>Choose the learner’s current grade</small></span></div>
+          <div><School2 /><span><strong>Correct class directory</strong><small>Sections update after choosing a grade</small></span></div>
+          <div><ShieldCheck /><span><strong>Student account only</strong><small>Teacher and administrator roles stay protected</small></span></div>
         </div>
+      </aside>
+
+      <form className="student-register-card" onSubmit={submit}>
+        <header>
+          <span><UserRound size={19} /> STUDENT REGISTRATION</span>
+          <h2>Create your learner account</h2>
+          <p>Complete the four steps below. Grade and Section cannot be changed by the learner after registration.</p>
+        </header>
 
         {error && <div className="alert error">{error}</div>}
 
-        <label>
-          Student name
+        <label className="student-register-field">
+          <span>1. Student’s complete name</span>
           <input
             required
             autoComplete="name"
+            placeholder="Example: Maria Santos"
             value={form.name}
             onChange={(event) =>
               setForm((current) => ({ ...current, name: event.target.value }))
@@ -91,79 +104,39 @@ export default function Register() {
           />
         </label>
 
-        <label>
-          Grade level
-          <select
-            value={form.gradeLevel}
-            onChange={(event) =>
-              setForm((current) => ({
-                ...current,
-                gradeLevel: event.target.value,
-              }))
-            }
-          >
-            {gradeOptions.map((grade) => (
-              <option key={grade.key} value={grade.name}>
-                {grade.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <fieldset className="student-register-choice-group">
+          <legend>2. Choose the grade level</legend>
+          <p>Selecting a grade immediately loads only its sections.</p>
+          <div className="student-register-grade-grid">
+            {gradeOptions.map((grade) => <button type="button" className={form.gradeLevel === grade.name ? "is-selected" : ""} onClick={() => chooseGrade(grade.name)} key={grade.key}><GraduationCap size={21} /><span><strong>{grade.name}</strong><small>{grade.sections.length} section{grade.sections.length === 1 ? "" : "s"} available</small></span>{form.gradeLevel === grade.name && <CheckCircle2 size={18} />}</button>)}
+          </div>
+        </fieldset>
 
-        <label>
-          Section
-          <select
-            value={form.section}
-            onChange={(event) =>
-              setForm((current) => ({ ...current, section: event.target.value }))
-            }
-          >
-            {sectionOptions.map((section) => (
-              <option key={section.key} value={section.name}>{section.name}</option>
-            ))}
-          </select>
-          <small className="field-help">
-            Your account will appear in the teacher directory for {classLabel(form.gradeLevel, form.section)}.
-          </small>
-        </label>
+        <fieldset className="student-register-choice-group">
+          <legend>3. Choose the section</legend>
+          <p>{form.gradeLevel ? `Available sections for ${form.gradeLevel}` : "Choose a grade first"}</p>
+          <div className="student-register-section-grid">
+            {sectionOptions.map((section) => <button type="button" className={form.section === section.name ? "is-selected" : ""} onClick={() => setForm((current) => ({ ...current, section: section.name }))} key={section.key}><School2 size={17} /><strong>{section.name}</strong>{form.section === section.name && <CheckCircle2 size={16} />}</button>)}
+          </div>
+          {form.gradeLevel && form.section && <div className="student-register-class-confirmation"><CheckCircle2 size={18} /><span>Your account will join <strong>{classLabel(form.gradeLevel, form.section)}</strong>.</span></div>}
+        </fieldset>
 
         {structureError && <div className="alert info">The published class list is temporarily unavailable. Please try again or contact the school administrator.</div>}
         {!structureLoading && !gradeOptions.length && (
           <div className="alert info">Registration will open after the administrator adds and publishes a section.</div>
         )}
 
-        <label>
-          Email
-          <input
-            type="email"
-            required
-            autoComplete="email"
-            value={form.email}
-            onChange={(event) =>
-              setForm((current) => ({ ...current, email: event.target.value }))
-            }
-          />
-        </label>
+        <div className="student-register-access">
+          <div><strong>4. Create the login</strong><span>Use an email the learner or parent can access.</span></div>
+          <label>Email address<input type="email" required autoComplete="email" placeholder="student@example.com" value={form.email} onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))} /></label>
+          <label>Password<input type="password" minLength={8} required autoComplete="new-password" placeholder="At least 8 characters" value={form.password} onChange={(event) => setForm((current) => ({ ...current, password: event.target.value }))} /></label>
+        </div>
 
-        <label>
-          Password
-          <input
-            type="password"
-            minLength={8}
-            required
-            autoComplete="new-password"
-            value={form.password}
-            onChange={(event) =>
-              setForm((current) => ({ ...current, password: event.target.value }))
-            }
-          />
-        </label>
-
-        <button className="primary-button" disabled={busy || structureLoading || !gradeOptions.length || !sectionOptions.length}>
+        <button className="student-register-submit" disabled={busy || structureLoading || !gradeOptions.length || !sectionOptions.length || !form.gradeLevel || !form.section}>
           {busy ? "Creating account…" : structureLoading ? "Loading classes…" : "Register"}
         </button>
 
-        <p className="auth-foot">
+        <p className="student-register-foot">
           Already registered? <Link to="/login">Login</Link>
         </p>
       </form>

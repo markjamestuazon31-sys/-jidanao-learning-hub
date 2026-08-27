@@ -25,6 +25,13 @@ const GUIDES = [
     action: { label: "Open regular content", to: "/teacher/content-studio" },
   },
   {
+    match: /^\/teacher\/game-zone$/,
+    title: "Teacher Game Zone",
+    description: "Play every published teacher game on a shared laptop or classroom TV and save the selected learner’s answers.",
+    steps: ["Choose class and published game", "Choose or add the learner", "Start TV Game and save answers"],
+    action: { label: "Publish another game", to: "/teacher/content-studio" },
+  },
+  {
     match: /^\/teacher\/students$/,
     title: "My students",
     description: "Only learners from your assigned Grade and Section appear here.",

@@ -9,6 +9,7 @@ import {
   GraduationCap,
   Layers3,
   ListChecks,
+  MonitorPlay,
   Sparkles,
   Users,
 } from "lucide-react";
@@ -48,7 +49,7 @@ export default function TeacherDashboard() {
 
   useEffect(() => {
     if (!user?.uid) return;
-    Promise.all([getTeacherStudentDirectory(), getTeacherLessons(user.uid), getTeacherCameraPrograms(profile)])
+    Promise.all([getTeacherStudentDirectory({ includeSharedDevice: true }), getTeacherLessons(user.uid), getTeacherCameraPrograms(profile)])
       .then(([students, lessons, cameraPrograms]) => setMetrics({ students: students.length, lessons: lessons.length, published: lessons.filter((item) => item.status === "published").length, cameraLevels: cameraPrograms.filter((item) => item.status === "published").length }))
       .catch((error) => console.warn("Unable to load teacher dashboard totals:", error));
   }, [profile, user?.uid]);
@@ -80,7 +81,7 @@ export default function TeacherDashboard() {
   return (
     <div className="teacher-dashboard-page">
       <header className="teacher-dashboard-hero">
-          <div><span>TEACHER COMMAND CENTER</span><h1>Welcome back, {profile?.name || "Teacher"}</h1><p>Manage assigned classes, create lessons and learning games, publish Camera Math, and monitor student progress from one professional workspace.</p><div><Link to="/teacher/content-studio" className="teacher-dashboard-primary"><Sparkles size={18} /> Create lesson or game</Link><Link to="/teacher/camera-content" className="teacher-dashboard-secondary"><Camera size={18} /> Camera Math</Link><Link to="/teacher/students" className="teacher-dashboard-secondary"><Users size={18} /> View my learners</Link></div></div>
+          <div><span>TEACHER COMMAND CENTER</span><h1>Welcome back, {profile?.name || "Teacher"}</h1><p>Manage assigned classes, create lessons and learning games, publish Camera Math, and monitor student progress from one professional workspace.</p><div><Link to="/teacher/content-studio" className="teacher-dashboard-primary"><Sparkles size={18} /> Create lesson or game</Link><Link to="/teacher/game-zone" className="teacher-dashboard-secondary"><MonitorPlay size={18} /> Open Game Zone</Link><Link to="/teacher/camera-content" className="teacher-dashboard-secondary"><Camera size={18} /> Camera Math</Link><Link to="/teacher/students" className="teacher-dashboard-secondary"><Users size={18} /> View my learners</Link></div></div>
         <aside><span><Bot size={24} /></span><div><small>SMART CONTENT WORKFLOW</small><strong>Lesson plan → lesson + game</strong><p>Documents are analyzed locally, then saved only after teacher review.</p></div></aside>
       </header>
 
@@ -117,7 +118,7 @@ export default function TeacherDashboard() {
           <section className="teacher-ai-cta"><span><Gamepad2 size={28} /></span><div><small>LEARNING CONTENT STUDIO</small><h2>Build a lesson and interactive game together</h2><p>Choose a subject and game format, write exactly 10 activities, preview, and publish to the correct section.</p><Link to="/teacher/content-studio">Open Content Studio</Link></div></section>
           <section className="teacher-camera-dashboard-cta"><span><Camera size={28} /></span><div><small>CAMERA CONTENT PUBLISHER</small><h2>Control every Camera Math and English level</h2><p>Write the exact 10 activities, select Grade + Section, review answers, and publish directly to assigned students.</p><Link to="/teacher/camera-content">Open Camera Publisher</Link></div></section>
           <section className="teacher-quiz-dashboard-cta"><span><ListChecks size={28} /></span><div><small>GOOGLE FORMS-STYLE QUIZZES</small><h2>Create and publish class assessments</h2><p>Add question types, answer keys, points, due dates, and automatic scoring for one assigned Grade + Section.</p><Link to="/teacher/quizzes/new">Create a quiz</Link></div></section>
-          <section className="teacher-attendance-dashboard-cta"><span><CalendarCheck2 size={28} /></span><div><small>DAILY CLASS REGISTER</small><h2>Record learner attendance</h2><p>Track present, absent, late, and excused learners with monthly class summaries and CSV export.</p><Link to="/teacher/attendance">Open Attendance Tracker</Link></div></section>
+          <section className="teacher-attendance-dashboard-cta"><span><CalendarCheck2 size={28} /></span><div><small>DAILY CLASS REGISTER</small><h2>Record learner attendance</h2><p>Track present, absent, late, and excused learners with monthly monitoring and a professional Word report.</p><Link to="/teacher/attendance">Open Attendance Tracker</Link></div></section>
         </aside>
       </div>
     </div>

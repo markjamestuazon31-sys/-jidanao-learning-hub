@@ -30,6 +30,7 @@ import TeacherQuizBuilder from "./pages/TeacherQuizBuilder";
 import TeacherQuizLibrary from "./pages/TeacherQuizLibrary";
 import TeacherQuizResults from "./pages/TeacherQuizResults";
 import TeacherCameraStudio from "./pages/TeacherCameraStudio";
+import TeacherGameZone from "./pages/TeacherGameZone";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminTeachers from "./pages/AdminTeachers";
 import AdminStudents from "./pages/AdminStudents";
@@ -108,6 +109,7 @@ export default function App() {
               <Route path="/teacher/ai-studio" element={protect(["teacher"], <AIStudio />)} />
               <Route path="/teacher/content-studio" element={protect(["teacher"], <LearningContentStudio />)} />
               <Route path="/teacher/camera-content" element={protect(["teacher"], <TeacherCameraStudio />)} />
+              <Route path="/teacher/game-zone" element={protect(["teacher"], <TeacherGameZone />)} />
               <Route path="/teacher/lessons" element={protect(["teacher"], <TeacherWorkspace view="lessons" />)} />
               <Route path="/teacher/students" element={protect(["teacher"], <TeacherStudents />)} />
               <Route path="/teacher/attendance" element={protect(["teacher"], <TeacherAttendance />)} />

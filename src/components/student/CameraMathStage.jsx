@@ -36,9 +36,15 @@ function inside(point, area) {
     && point.y <= area.bottom);
 }
 
-function tileAtCursor(cursor, count) {
+function positionsForCount(count) {
+  if (count === 2) return [{ x: 0.28, y: 0.34 }, { x: 0.72, y: 0.34 }];
+  if (count === 3) return [{ x: 0.19, y: 0.32 }, { x: 0.5, y: 0.23 }, { x: 0.81, y: 0.32 }];
+  return TILE_POSITIONS.slice(0, Math.min(4, count));
+}
+
+function tileAtCursor(cursor, positions) {
   if (!cursor) return -1;
-  return TILE_POSITIONS.slice(0, Math.min(4, count)).findIndex((position) => (
+  return positions.findIndex((position) => (
     Math.abs(cursor.x - position.x) <= 0.105
     && Math.abs(cursor.y - position.y) <= 0.14
   ));
@@ -58,6 +64,10 @@ export default function CameraMathStage({
   onDrop,
   disabled = false,
   autoStart = true,
+  itemNoun = "answer",
+  dropTitle = "ANSWER BOX",
+  dropInstruction = "Pinch, drag, and release the correct answer",
+  stageLabel = "Camera pinch, drag, and drop answer board",
 }) {
   const { playSound } = useLearningPreferences();
   const {
@@ -73,6 +83,7 @@ export default function CameraMathStage({
     stop,
   } = useHandTracking();
   const visibleChoices = useMemo(() => choices.slice(0, 4), [choices]);
+  const visiblePositions = useMemo(() => positionsForCount(visibleChoices.length), [visibleChoices.length]);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
   const [grabbedIndex, setGrabbedIndex] = useState(-1);
   const [message, setMessage] = useState("Starting the camera automatically…");
@@ -97,17 +108,17 @@ export default function CameraMathStage({
     setHoveredIndex(-1);
     setGrabbed(-1);
     setMessage(active
-      ? "Move to a number, pinch to grab it, then release it in the answer box."
+      ? `Move to a ${itemNoun}, pinch to grab it, then release it in the answer box.`
       : "Starting the camera automatically…");
-  }, [active, questionKey, setGrabbed]);
+  }, [active, itemNoun, questionKey, setGrabbed]);
 
   useEffect(() => {
     if (!autoStart || autoAttemptedRef.current) return;
     autoAttemptedRef.current = true;
     start()
-      .then(() => setMessage("Camera ready. Pinch a number to pick it up."))
+      .then(() => setMessage(`Camera ready. Pinch a ${itemNoun} to pick it up.`))
       .catch((startError) => setMessage(startError?.message || "Camera access could not start."));
-  }, [autoStart, start]);
+  }, [autoStart, itemNoun, start]);
 
   const submitChoice = useCallback((index, source) => {
     if (disabled || submittedRef.current || index < 0 || index >= visibleChoices.length) return;
@@ -125,7 +136,7 @@ export default function CameraMathStage({
 
     const wasPinching = previousPinchRef.current;
     previousPinchRef.current = pinching;
-    const overTile = tileAtCursor(cursor, visibleChoices.length);
+    const overTile = tileAtCursor(cursor, visiblePositions);
     const currentGrabbed = grabbedIndexRef.current;
 
     if (currentGrabbed < 0) setHoveredIndex(overTile);
@@ -143,21 +154,21 @@ export default function CameraMathStage({
         submitChoice(currentGrabbed, "camera-drag");
       } else {
         setGrabbed(-1);
-        setMessage("Almost! Release the number inside the large answer box.");
+        setMessage(`Almost! Release the ${itemNoun} inside the large answer box.`);
       }
       return;
     }
 
     if (currentGrabbed >= 0 && pinching) {
       setMessage(inside(cursor, DROP_AREA)
-        ? "Great! Open your fingers to drop the number."
-        : "Keep pinching and move the number into the answer box.");
+        ? `Great! Open your fingers to drop the ${itemNoun}.`
+        : `Keep pinching and move the ${itemNoun} into the answer box.`);
     } else if (overTile >= 0) {
       setMessage(`Pinch your thumb and index finger on ${visibleChoices[overTile]}.`);
     } else if (cursor) {
-      setMessage("Move your fingertip onto a floating number.");
+      setMessage(`Move your fingertip onto a floating ${itemNoun}.`);
     }
-  }, [active, cursor, disabled, pinching, playSound, setGrabbed, submitChoice, visibleChoices]);
+  }, [active, cursor, disabled, itemNoun, pinching, playSound, setGrabbed, submitChoice, visibleChoices, visiblePositions]);
 
   function selectByTap(index) {
     if (disabled || submittedRef.current) return;
@@ -174,7 +185,7 @@ export default function CameraMathStage({
         setMessage("Camera paused. Tap Retry camera when you are ready.");
       } else {
         await start();
-        setMessage("Camera ready. Pinch a number to pick it up.");
+        setMessage(`Camera ready. Pinch a ${itemNoun} to pick it up.`);
       }
     } catch (startError) {
       setMessage(startError?.message || "Camera access could not start.");
@@ -184,7 +195,7 @@ export default function CameraMathStage({
   const overDrop = grabbedIndex >= 0 && inside(cursor, DROP_AREA);
 
   return (
-    <section className="camera-math-stage camera-drag-stage" aria-label="Camera math pinch, drag, and drop answer board">
+    <section className="camera-math-stage camera-drag-stage" aria-label={stageLabel}>
       <div className="camera-math-stage__toolbar">
         <div>
           <span className={active ? "is-live" : ""}><i /> {active ? "Camera ready" : loading ? "Starting camera" : "Camera paused"}</span>
@@ -197,7 +208,7 @@ export default function CameraMathStage({
       </div>
 
       <div className="camera-drag-instructions" aria-label="How to answer">
-        <span><b>1</b><Grab size={18} /> Pinch a number</span>
+        <span><b>1</b><Grab size={18} /> Pinch a {itemNoun}</span>
         <span><b>2</b><Move size={18} /> Drag it to the box</span>
         <span><b>3</b><PackageCheck size={18} /> Open hand to drop</span>
       </div>
@@ -208,7 +219,7 @@ export default function CameraMathStage({
           <div className="camera-math-stage__camera-off">
             <Hand size={54} />
             <strong>{loading ? "Preparing your hand controller…" : "Camera needs permission"}</strong>
-            <p>{loading ? "The game starts automatically when hand tracking is ready." : "Allow camera access in the browser, then press Retry camera. You can also tap a number and the answer box."}</p>
+            <p>{loading ? "The game starts automatically when hand tracking is ready." : `Allow camera access in the browser, then press Retry camera. You can also tap a ${itemNoun} and the answer box.`}</p>
           </div>
         )}
 
@@ -227,9 +238,9 @@ export default function CameraMathStage({
           </svg>
         )}
 
-        <div className="camera-floating-answers" aria-label="Floating answer numbers">
+        <div className="camera-floating-answers" aria-label={`Floating ${itemNoun} choices`}>
           {visibleChoices.map((choice, index) => {
-            const position = TILE_POSITIONS[index];
+            const position = visiblePositions[index];
             const dragging = grabbedIndex === index;
             const left = dragging && cursor ? cursor.x : position.x;
             const top = dragging && cursor ? cursor.y : position.y;
@@ -259,8 +270,8 @@ export default function CameraMathStage({
           aria-label={grabbedIndex >= 0 ? `Drop ${visibleChoices[grabbedIndex]} in the answer box` : "Answer drop box"}
         >
           <PackageCheck size={28} />
-          <strong>{overDrop ? "OPEN YOUR HAND TO DROP" : grabbedIndex >= 0 ? "BRING THE NUMBER HERE" : "ANSWER BOX"}</strong>
-          <span>{grabbedIndex >= 0 ? `${visibleChoices[grabbedIndex]} is ready to drop` : "Pinch, drag, and release the correct number"}</span>
+          <strong>{overDrop ? "OPEN YOUR HAND TO DROP" : grabbedIndex >= 0 ? `BRING THE ${itemNoun.toUpperCase()} HERE` : dropTitle}</strong>
+          <span>{grabbedIndex >= 0 ? `${visibleChoices[grabbedIndex]} is ready to drop` : dropInstruction}</span>
         </button>
 
         {cursor && (
