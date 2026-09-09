@@ -211,48 +211,5 @@ export function systemCatalogForGrade(value) {
   const grade = normalizeGradeLevel(value);
   if (!GRADE_EXPERIENCES[grade]) return [];
   const experience = getGradeExperience(grade);
-  return [
-    {
-      id: `camera-math-${gradeToKey(grade)}`,
-      type: "game",
-      status: "published",
-      source: "system",
-      route: "/student/camera-math",
-      grade,
-      subject: "Mathematics",
-      title: "Weekly Camera Math Mission",
-      description: `${experience.difficulty} ${grade} math with floating number choices students pinch, drag, and release into the answer box. A new 10-item mission arrives every week.`,
-      competency: experience.focus.filter((item) => /addition|subtraction|multiplication|operation|fraction|decimal|ratio|problem/i.test(item)).join(", "),
-      difficulty: experience.difficulty,
-      estimatedMinutes: 10,
-      coverEmoji: "✋",
-      interaction: "camera-drag",
-      weeklyMission: true,
-      totalLevels: 10,
-      itemsPerLevel: 10,
-      certificateTrack: "math",
-      builtIn: true,
-    },
-    {
-      id: `camera-reading-english-${gradeToKey(grade)}`,
-      type: "game",
-      status: "published",
-      source: "system",
-      route: "/student/camera-reading-english",
-      grade,
-      subject: "English Reading",
-      title: "English Camera Reading",
-      description: `${grade}-appropriate English passages with live reading practice, supportive voice feedback, and a Level 10 certificate.`,
-      competency: experience.focus.filter((item) => /reading|vocabulary|comprehension|language|critical/i.test(item)).join(", ") || "Fluency, pronunciation, vocabulary, and expression",
-      difficulty: experience.difficulty,
-      estimatedMinutes: 10,
-      coverEmoji: "📖",
-      interaction: "camera-reading",
-      language: "english",
-      totalLevels: 10,
-      itemsPerLevel: 10,
-      certificateTrack: "english",
-      builtIn: true,
-    },
-  ];
+  return [];
 }

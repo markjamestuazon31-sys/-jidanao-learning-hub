@@ -80,11 +80,55 @@ function flattenPublishedCatalog(value) {
   return results;
 }
 
+function flattenPublishedCameraPrograms(value) {
+  if (!value || typeof value !== "object") return [];
+  const results = [];
+  Object.entries(value).forEach(([classKey, tracks]) => {
+    if (!tracks || typeof tracks !== "object") return;
+    Object.entries(tracks).forEach(([track, levels]) => {
+      if (!levels || typeof levels !== "object") return;
+      Object.entries(levels).forEach(([levelKey, record]) => {
+        if (!record || typeof record !== "object") return;
+        const program = {
+          id: `${classKey}-${track}-${levelKey}`,
+          type: "game",
+          source: "teacher",
+          status: "published",
+          route: track === "math" ? "/student/camera-math" : "/student/camera-reading-english",
+          grade: record.grade || record.gradeLevel || "",
+          gradeLevel: record.grade || record.gradeLevel || "",
+          section: record.section || "",
+          classKey: record.classKey || classKey,
+          teacherId: record.teacherId,
+          teacherName: record.teacherName,
+          title: record.title || `${track} camera level ${levelKey.replace(/\D/g, "") || 1}`,
+          description: record.instructions || record.competency || `Teacher-created ${track} activity.`,
+          subject: record.subject || (track === "math" ? "Mathematics" : "English"),
+          competency: record.competency || "",
+          ...record,
+        };
+        results.push(program);
+      });
+    });
+  });
+  return results;
+}
+
+function dedupeCatalogItems(items) {
+  const seen = new Set();
+  return items.filter((item) => {
+    const key = `${item?.type || "item"}:${item?.id || item?.title || item?.route || item?.classKey || item?.subject || Math.random()}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function mergeSystemCatalog(items, gradeLevel) {
   const system = systemCatalogForGrade(gradeLevel);
   const ids = new Set(system.map((item) => `${item.type}:${item.id}`));
   const visibleItems = items.filter((item) => !String(item.id || "").startsWith("camera-reading-filipino-"));
-  return [...system, ...visibleItems.filter((item) => !ids.has(`${item.type}:${item.id}`))];
+  return dedupeCatalogItems([...system, ...visibleItems.filter((item) => !ids.has(`${item.type}:${item.id}`))]);
 }
 
 function filterCatalogForSection(items, gradeLevel, sectionValue) {
@@ -253,26 +297,38 @@ export async function getPublishedCatalog() {
 
 export async function getPublishedCatalogForGrade(gradeLevel, section = "") {
   const key = gradeToKey(gradeLevel);
-  const snapshot = await get(ref(database, `publishedCatalog/${key}`));
-  const remote = snapshot.exists() ? flattenPublishedCatalog({ [key]: snapshot.val() }) : [];
-  return filterCatalogForSection(mergeSystemCatalog(remote, gradeLevel), gradeLevel, section);
+  const [catalogSnapshot, cameraSnapshot] = await Promise.all([
+    get(ref(database, `publishedCatalog/${key}`)),
+    get(ref(database, "cameraPublished")),
+  ]);
+  const remote = catalogSnapshot.exists() ? flattenPublishedCatalog({ [key]: catalogSnapshot.val() }) : [];
+  const cameraItems = cameraSnapshot.exists() ? flattenPublishedCameraPrograms(cameraSnapshot.val()) : [];
+  const merged = dedupeCatalogItems([...remote, ...cameraItems.filter((item) => normalizeGradeLevel(item.grade || item.gradeLevel) === gradeLevel)]);
+  return filterCatalogForSection(mergeSystemCatalog(merged, gradeLevel), gradeLevel, section);
 }
 
 export function subscribePublishedCatalogForGrade(gradeLevel, onData, onError, section = "") {
   const key = gradeToKey(gradeLevel);
-  return onValue(
-    ref(database, `publishedCatalog/${key}`),
-    (snapshot) => {
-      const items = snapshot.exists()
-        ? flattenPublishedCatalog({ [key]: snapshot.val() })
+  const catalogRef = ref(database, `publishedCatalog/${key}`);
+  const cameraRef = ref(database, "cameraPublished");
+
+  return onValue(catalogRef, async (catalogSnapshot) => {
+    try {
+      const cameraSnapshot = await get(cameraRef);
+      const publishedItems = catalogSnapshot.exists()
+        ? flattenPublishedCatalog({ [key]: catalogSnapshot.val() })
         : [];
-      onData(filterCatalogForSection(mergeSystemCatalog(items, gradeLevel), gradeLevel, section));
-    },
-    (error) => {
-      onData(mergeSystemCatalog([], gradeLevel));
+      const cameraItems = cameraSnapshot.exists() ? flattenPublishedCameraPrograms(cameraSnapshot.val()) : [];
+      const merged = dedupeCatalogItems([...publishedItems, ...cameraItems.filter((item) => normalizeGradeLevel(item.grade || item.gradeLevel) === gradeLevel)]);
+      onData(filterCatalogForSection(mergeSystemCatalog(merged, gradeLevel), gradeLevel, section));
+    } catch (error) {
+      onData(filterCatalogForSection(mergeSystemCatalog([], gradeLevel), gradeLevel, section));
       onError?.(error);
-    },
-  );
+    }
+  }, (error) => {
+    onData(mergeSystemCatalog([], gradeLevel));
+    onError?.(error);
+  });
 }
 
 async function saveTeacherContent(type, teacherId, content) {

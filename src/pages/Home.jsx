@@ -24,6 +24,7 @@ import HomeHeroArtwork from "../components/HomeHeroArtwork";
 import { GRADES } from "../data/catalog";
 import { systemCatalogForGrade } from "../data/gradeExperience";
 import { getPublishedCatalog } from "../services/dataService";
+import { getPublishedAnnouncements } from "../services/adminOperationsService";
 import "../styles/home-professional-refresh.css";
 
 const GRADE_FILTERS = ["All Grades", ...GRADES];
@@ -142,6 +143,7 @@ export default function Home() {
   const [catalog, setCatalog] = useState(PUBLIC_HOME_CATALOG);
   const [selectedGrade, setSelectedGrade] = useState("All Grades");
   const [loadingCatalog, setLoadingCatalog] = useState(true);
+  const [announcements, setAnnouncements] = useState([]);
 
   useEffect(() => {
     if (!location.hash) return undefined;
@@ -159,13 +161,20 @@ export default function Home() {
 
     async function loadPublishedContent() {
       try {
-        const published = await getPublishedCatalog();
-        if (active) setCatalog(mergeCatalog([...PUBLIC_HOME_CATALOG, ...published]));
+        const [published, nextAnnouncements] = await Promise.all([
+          getPublishedCatalog(),
+          getPublishedAnnouncements({ role: "student" }),
+        ]);
+        if (active) {
+          setCatalog(mergeCatalog([...PUBLIC_HOME_CATALOG, ...published]));
+          setAnnouncements(nextAnnouncements);
+        }
       } catch (error) {
         console.info(
           "Published content is not publicly readable yet. Showing the built-in catalog instead.",
           error,
         );
+        if (active) setAnnouncements([]);
       } finally {
         if (active) setLoadingCatalog(false);
       }
@@ -370,6 +379,37 @@ export default function Home() {
           </div>
         )}
       </section>
+
+      {announcements.length > 0 && (
+        <section className="home-announcement-band" aria-label="School announcements">
+          <div className="home-announcement-band__header">
+            <span className="home-announcement-band__icon">📢</span>
+            <h3>Published announcements</h3>
+          </div>
+
+          <div className="home-announcement-band__grid">
+            {announcements.slice(0, 3).map((item) => (
+              <article
+                key={item.id}
+                className={`announcement-card announcement-card--${item.priority || "normal"}`}
+              >
+                <div className="announcement-header">
+                  <span className="priority-badge">
+                    {String(item.priority || "normal").toUpperCase()}
+                  </span>
+
+                  <span className="announcement-date">
+                    📅 {new Date(item.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
+
+                <h4>{item.title}</h4>
+                <p>{item.message}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section id="featured-lessons" className="home-section-v2" aria-labelledby="featured-content-title">
         <div className="home-section-v2__heading">

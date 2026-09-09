@@ -18,6 +18,104 @@
 }
 
 /* Hero */
+.home-v2--school .home-announcement-band {
+  background: #f8fbff;
+  border-radius: 24px;
+  padding: 30px;
+  margin-top: 40px;
+  border: 1px solid #dbeafe;
+}
+
+.home-v2--school .home-announcement-band__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.home-v2--school .home-announcement-band__header h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e3a8a;
+}
+
+.home-v2--school .home-announcement-band__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: #e0f2fe;
+  font-size: 1.2rem;
+}
+
+.home-v2--school .home-announcement-band__grid {
+  display: grid;
+  gap: 20px;
+}
+
+.home-v2--school .announcement-card {
+  background: white;
+  border-radius: 18px;
+  padding: 24px;
+  border-left: 6px solid #3b82f6;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.home-v2--school .announcement-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.home-v2--school .announcement-card--important {
+  border-left: 6px solid #270ace;
+  background: linear-gradient(135deg, #ffffff,  #1974df);
+}
+
+.home-v2--school .announcement-card--urgent {
+  border-left: 6px solid #1f0481;
+  background: linear-gradient(135deg, #fff1f2, #ffffff);
+}
+
+.home-v2--school .announcement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.home-v2--school .priority-badge {
+  background: #f59e0b;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.home-v2--school .announcement-date {
+  color: #000000;
+  font-size: 0.90rem;
+  font-weight: bold;
+}
+
+.home-v2--school .announcement-card h4 {
+  margin: 10px 0;
+  font-size: 1.2rem;
+  color: #1e293b;
+}
+
+.home-v2--school .announcement-card p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
 .home-v2--school .home-hero-v2 {
   min-height: 540px;
   grid-template-columns: minmax(0, 1fr) minmax(500px, 0.92fr);

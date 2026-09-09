@@ -23,6 +23,63 @@
   gap: 18px;
 }
 
+.student-announcement-strip {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.student-announcement {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 16px;
+  border: 1px solid #dfe7f5;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f7fbff, #eef5ff);
+  box-shadow: 0 14px 28px rgba(12, 52, 124, 0.06);
+}
+
+.student-announcement__tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 74px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #dfeeff;
+  color: #1651b8;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.student-announcement--important .student-announcement__tag {
+  background: #fff3d9;
+  color: #9a6a00;
+}
+
+.student-announcement--urgent .student-announcement__tag {
+  background: #ffe4e8;
+  color: #b1223f;
+}
+
+.student-announcement strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--student-text);
+  font-size: 14px;
+}
+
+.student-announcement p {
+  margin: 0;
+  color: var(--student-muted);
+  font-size: 12px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
 .student-welcome-hero--v3 {
   min-height: 304px;
   grid-template-columns: minmax(410px, 1.12fr) minmax(235px, .52fr) minmax(285px, .67fr);

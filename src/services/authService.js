@@ -203,6 +203,40 @@ export async function completeStudentProfile({ name, gradeLevel, section }) {
   }
 }
 
+export async function updateStudentProfileAccount({ uid, name }) {
+  if (!uid) throw new Error("Student account is required.");
+
+  const snapshot = await get(ref(database, `users/${uid}`));
+  if (!snapshot.exists()) throw new Error("Student profile not found.");
+
+  const currentProfile = snapshot.val();
+  if (currentProfile?.role !== "student") {
+    throw new Error("Only student profiles can be edited here.");
+  }
+
+  const normalizedName = normalizeName(name, currentProfile.email || currentProfile.name);
+  if (normalizedName.length < 2) {
+    throw new Error("Enter the learner's full name.");
+  }
+
+  const updates = {
+    [`users/${uid}/name`]: normalizedName,
+    [`users/${uid}/updatedAt`]: Date.now(),
+  };
+
+  await update(ref(database), updates);
+
+  if (auth.currentUser?.uid === uid) {
+    await updateProfile(auth.currentUser, { displayName: normalizedName });
+  }
+
+  return {
+    ...currentProfile,
+    name: normalizedName,
+    updatedAt: Date.now(),
+  };
+}
+
 export async function getUserProfile(uid) {
   if (!uid) return null;
   const snapshot = await get(ref(database, `users/${uid}`));

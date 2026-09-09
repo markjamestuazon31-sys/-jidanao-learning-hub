@@ -224,9 +224,19 @@ function normalizeProgram(record, fallback = {}) {
   if (!record || typeof record !== "object") return null;
   const track = trackId(record.track || fallback.track);
   const level = integer(record.level, fallback.level || 1, 1, 10);
+  const classKey = text(record.classKey || fallback.classKey, 120);
+  const generatedId = text(record.id || fallback.id || `camera-${track}-${classKey || "class"}-level-${level}`, 180);
+  const route = text(record.route || fallback.route, 200) || (track === "math" ? "/student/camera-math" : "/student/camera-reading-english");
   return {
-    ...record, track, level, title: text(record.title, 120), competency: text(record.competency, 600),
-    instructions: text(record.instructions, 600), questions: normalizeCameraItems(record.questions, track),
+    ...record,
+    id: generatedId,
+    route,
+    track,
+    level,
+    title: text(record.title, 120),
+    competency: text(record.competency, 600),
+    instructions: text(record.instructions, 600),
+    questions: normalizeCameraItems(record.questions, track),
   };
 }
 
@@ -285,11 +295,32 @@ export async function saveTeacherCameraProgram(teacherProfile, input) {
     weekKey: track === "math" ? week.key : "ongoing", weekLabel: track === "math" ? week.label : `Ongoing ${meta.label} practice`,
     createdAt: Number(existing.createdAt || now), updatedAt: now, ...(status === "published" ? { publishedAt: now } : {}),
   });
+  const catalogId = `${targetClass.classKey}-${track}-level-${level}`;
+  const catalogRecord = clean({
+    id: catalogId,
+    type: "game",
+    source: "teacher",
+    status: "published",
+    ...targetClass,
+    grade: targetClass.grade,
+    gradeLevel: targetClass.grade,
+    title: record.title,
+    description: text(input.instructions, 600) || `${meta.label} practice for ${targetClass.grade} · ${targetClass.section}.`,
+    subject: meta.subject,
+    competency: record.competency,
+    route: track === "math" ? "/student/camera-math" : "/student/camera-reading-english",
+    teacherId: currentUser.uid,
+    teacherName: record.teacherName,
+    teacherContent: true,
+    createdAt: record.createdAt,
+    updatedAt: now,
+  });
   await update(ref(database), {
     [`cameraPrograms/${relativePath}`]: record,
     [`cameraPublished/${relativePath}`]: status === "published" ? record : null,
+    ...(status === "published" ? { [`publishedCatalog/${targetClass.gradeKey}/games/${catalogId}`]: catalogRecord } : {}),
   });
-  return normalizeProgram(record);
+  return normalizeProgram(record, { id: catalogId, route: catalogRecord.route, classKey: targetClass.classKey });
 }
 
 export async function getPublishedCameraProgramsForStudent(profile) {

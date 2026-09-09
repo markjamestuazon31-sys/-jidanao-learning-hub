@@ -6,6 +6,8 @@ import {
   Gamepad2,
   GraduationCap,
   Mail,
+  PenLine,
+  Save,
   ShieldCheck,
   Sparkles,
   Target,
@@ -14,11 +16,13 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { onValue, ref } from "firebase/database";
 import ProfileAvatar from "../components/ProfileAvatar";
 import { useAuth } from "../context/AuthContext";
+import { useSchoolStructure } from "../context/SchoolStructureContext";
 import { database } from "../firebase/firebaseConfig";
+import { activeGradeOptions, sectionsForGrade } from "../data/schoolClasses";
 import { normalizeProgress, subscribeUserProgress } from "../services/dataService";
 import {
   PROFILE_PHOTO_ACCEPT,
@@ -26,6 +30,8 @@ import {
   removeStudentProfilePhoto,
   uploadStudentProfilePhoto,
 } from "../services/profilePhotoService";
+import { updateStudentProfileAccount } from "../services/authService";
+import { getPublishedAnnouncements } from "../services/adminOperationsService";
 import "../styles/student-profile.css";
 
 function ProfileFact({ icon: Icon, label, value }) {
@@ -38,14 +44,52 @@ function ProfileFact({ icon: Icon, label, value }) {
 }
 
 export default function StudentProfile() {
-  const { user, profile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
+  const { structure } = useSchoolStructure();
   const [progress, setProgress] = useState(() => normalizeProgress({}));
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("success");
   const [hasPhoto, setHasPhoto] = useState(false);
   const [pendingPhoto, setPendingPhoto] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [announcements, setAnnouncements] = useState([]);
+  const [form, setForm] = useState({ name: profile?.name || "" });
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (!profile) return;
+    setForm({
+      name: profile.name || "",
+    });
+  }, [profile]);
+
+  useEffect(() => {
+    let active = true;
+    async function loadAnnouncements() {
+      try {
+        const nextAnnouncements = await getPublishedAnnouncements({
+          role: "student",
+          grade: profile?.gradeLevel,
+          section: profile?.section,
+        });
+        if (active) setAnnouncements(nextAnnouncements);
+      } catch (error) {
+        console.warn("Unable to load student profile announcements:", error);
+        if (active) setAnnouncements([]);
+      }
+    }
+
+    if (profile) {
+      void loadAnnouncements();
+    } else {
+      setAnnouncements([]);
+    }
+
+    return () => {
+      active = false;
+    };
+  }, [profile?.gradeLevel, profile?.section, profile]);
 
   useEffect(() => {
     if (!user?.uid) return undefined;
@@ -108,6 +152,29 @@ export default function StudentProfile() {
     } catch (error) {
       setMessageType("error");
       setMessage(error.message || "Your profile picture could not be removed.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function saveProfileChanges(event) {
+    event.preventDefault();
+    if (!user?.uid || busy) return;
+    setBusy(true);
+    setMessage("");
+
+    try {
+      await updateStudentProfileAccount({
+        uid: user.uid,
+        name: form.name,
+      });
+      await refreshProfile();
+      setMessageType("success");
+      setMessage("Your learner account details were updated.");
+      setIsEditing(false);
+    } catch (error) {
+      setMessageType("error");
+      setMessage(error.message || "Your account details could not be updated.");
     } finally {
       setBusy(false);
     }
@@ -193,18 +260,76 @@ export default function StudentProfile() {
 
         <div className="student-profile-details-column">
           <article className="student-dashboard-panel student-profile-information">
-            <div className="student-panel-heading">
-              <span className="student-panel-icon student-panel-icon--blue"><GraduationCap size={21} /></span>
-              <div><small>ACCOUNT DETAILS</small><h2>Learner information</h2></div>
+            <div className="student-panel-heading student-profile-panel-heading">
+              <div className="student-panel-heading__title">
+                <span className="student-panel-icon student-panel-icon--blue"><GraduationCap size={21} /></span>
+                <div><small>ACCOUNT DETAILS</small><h2>Learner information</h2></div>
+              </div>
+              {!isEditing && (
+                <button type="button" className="student-profile-edit-toggle" onClick={() => setIsEditing(true)}>
+                  <PenLine size={15} /> Edit profile
+                </button>
+              )}
             </div>
-            <div className="student-profile-facts-grid">
-              <ProfileFact icon={GraduationCap} label="Grade level" value={profile?.gradeLevel} />
-              <ProfileFact icon={Users} label="Section" value={profile?.section || "Not assigned"} />
-              <ProfileFact icon={Mail} label="School email" value={profile?.email || user?.email} />
-              <ProfileFact icon={ShieldCheck} label="Account status" value={profile?.status === "disabled" ? "Disabled" : "Active"} />
-              <ProfileFact icon={Sparkles} label="Learning level" value={`Level ${summary.level}`} />
-            </div>
+
+            {isEditing ? (
+              <form className="student-profile-edit-form" onSubmit={saveProfileChanges}>
+                <label className="student-profile-field">
+                  <span>Student name</span>
+                  <input
+                    required
+                    value={form.name}
+                    onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
+                  />
+                </label>
+
+                <label className="student-profile-field is-readonly">
+                  <span>School email</span>
+                  <input value={profile?.email || user?.email || ""} readOnly />
+                </label>
+
+                <div className="student-profile-form-actions">
+                  <button type="submit" className="student-profile-save" disabled={busy || !form.name}>
+                    <Save size={16} /> {busy ? "Saving…" : "Save changes"}
+                  </button>
+                  <button type="button" className="student-profile-cancel" onClick={() => setIsEditing(false)} disabled={busy}>
+                    <X size={16} /> Cancel
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="student-profile-facts-grid">
+                <ProfileFact icon={GraduationCap} label="Grade level" value={profile?.gradeLevel} />
+                <ProfileFact icon={Users} label="Section" value={profile?.section || "Not assigned"} />
+                <ProfileFact icon={Mail} label="School email" value={profile?.email || user?.email} />
+                <ProfileFact icon={ShieldCheck} label="Account status" value={profile?.status === "disabled" ? "Disabled" : "Active"} />
+                <ProfileFact icon={Sparkles} label="Learning level" value={`Level ${summary.level}`} />
+              </div>
+            )}
           </article>
+
+          {announcements.length > 0 && (
+            <article className="student-dashboard-panel student-profile-announcements">
+              <div className="student-panel-heading">
+                <div className="student-panel-heading__title">
+                  <span className="student-panel-icon student-panel-icon--blue"><Sparkles size={21} /></span>
+                  <div><small>ANNOUNCEMENTS</small><h2>School updates</h2></div>
+                </div>
+              </div>
+
+              <div className="student-profile-announcement-list">
+                {announcements.slice(0, 3).map((item) => (
+                  <article key={item.id} className={`student-profile-announcement student-profile-announcement--${item.priority || "normal"}`}>
+                    <span className="student-profile-announcement__tag">{String(item.priority || "normal").toUpperCase()}</span>
+                    <div className="student-profile-announcement__content">
+                      <strong>{item.title}</strong>
+                      <p>{item.message}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </article>
+          )}
 
           <article className="student-dashboard-panel student-profile-progress-card">
             <div className="student-panel-heading">

@@ -27,6 +27,7 @@ import {
   subscribeUserProgress,
 } from "../services/dataService";
 import { subscribePublishedQuizzes } from "../services/assessmentService";
+import { getPublishedAnnouncements } from "../services/adminOperationsService";
 import {
   buildSubjectProgress,
   activityHref,
@@ -111,6 +112,7 @@ export default function StudentDashboard() {
   const [catalogError, setCatalogError] = useState("");
   const [progressError, setProgressError] = useState("");
   const [assignedQuizzes, setAssignedQuizzes] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
   const gradeExperience = getGradeExperience(profile?.gradeLevel);
 
   useEffect(() => {
@@ -151,6 +153,33 @@ export default function StudentDashboard() {
       console.warn("Unable to load assigned quizzes:", error);
     });
   }, [profile?.classKey]);
+
+  useEffect(() => {
+    let active = true;
+    async function loadAnnouncements() {
+      try {
+        const nextAnnouncements = await getPublishedAnnouncements({
+          role: "student",
+          grade: profile?.gradeLevel,
+          section: profile?.section,
+        });
+        if (active) setAnnouncements(nextAnnouncements);
+      } catch (error) {
+        console.warn("Unable to load student announcements:", error);
+        if (active) setAnnouncements([]);
+      }
+    }
+
+    if (profile?.gradeLevel || profile?.section) {
+      void loadAnnouncements();
+    } else {
+      setAnnouncements([]);
+    }
+
+    return () => {
+      active = false;
+    };
+  }, [profile?.gradeLevel, profile?.section]);
 
   const summary = progress.summary;
   const recommendedLessons = useMemo(() => recommendCatalog(catalog, progress, "lesson", 3), [catalog, progress]);
@@ -210,6 +239,20 @@ export default function StudentDashboard() {
 
       {progressError && <div className="student-inline-warning">{progressError}</div>}
       {catalogError && <CatalogError error={catalogError} />}
+
+      {announcements.length > 0 && (
+        <section className="student-announcement-strip" aria-label="School announcements">
+          {announcements.slice(0, 2).map((item) => (
+            <article key={item.id} className={`student-announcement student-announcement--${item.priority || "normal"}`}>
+              <span className="student-announcement__tag">{String(item.priority || "normal").toUpperCase()}</span>
+              <div>
+                <strong>{item.title}</strong>
+                <p>{item.message}</p>
+              </div>
+            </article>
+          ))}
+        </section>
+      )}
 
       <section className="student-metrics-grid" aria-label="Learning overview">
         <StudentMetric icon={BookOpenCheck} label="Lessons Completed" value={summary.lessonsCompleted} helper="Awesome work! 🎉" tone="blue" />

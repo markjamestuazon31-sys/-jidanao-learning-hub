@@ -119,6 +119,33 @@ export async function deleteAnnouncement(admin, announcement) {
   ]);
 }
 
+export async function getPublishedAnnouncements({ role = "student", audience = "all", grade = "", section = "" } = {}) {
+  const snapshot = await get(ref(database, "announcements"));
+  if (!snapshot.exists()) return [];
+
+  const now = Date.now();
+  const items = entries(snapshot.val())
+    .map(([id, item]) => ({ id, ...item }))
+    .filter((item) => item?.status === "published")
+    .filter((item) => !item.expiresAt || Number(item.expiresAt) > now)
+    .sort((first, second) => Number(second.createdAt || 0) - Number(first.createdAt || 0));
+
+  return items.filter((item) => {
+    const audienceType = String(item.audience || "all").toLowerCase();
+    if (audienceType === "all") return true;
+    if (audienceType === "students" && role === "student") return true;
+    if (audienceType === "teachers" && role === "teacher") return true;
+    if (audienceType === "class") {
+      const targetGrade = String(item.grade || "").trim().toLowerCase();
+      const targetSection = String(item.section || "").trim().toLowerCase();
+      const gradeMatches = !grade || !targetGrade || targetGrade === String(grade).trim().toLowerCase();
+      const sectionMatches = !section || !targetSection || targetSection === String(section).trim().toLowerCase();
+      return gradeMatches && sectionMatches;
+    }
+    return audienceType === String(audience || "all").toLowerCase();
+  });
+}
+
 export function exportAdminWordReport(data) {
   if (!data) return;
 

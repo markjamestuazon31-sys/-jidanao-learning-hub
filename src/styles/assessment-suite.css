@@ -116,7 +116,64 @@
 
 .student-quiz-library,
 .student-form-page { width: min(100%, 1450px); display: grid; gap: 18px; margin: 0 auto; }
-.student-report-download { min-height: 32px; display: inline-flex; align-items: center; gap: 6px; padding: 0 10px; border: 1px solid var(--student-primary); border-radius: 9px; color: var(--student-primary); background: #fff; font-size: 9px; font-weight: 850; }
+.student-page-hero__actions {
+  display: grid;
+  gap: 8px;
+  justify-items: end;
+}
+
+.student-page-hero__average {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+}
+
+.student-page-hero__average strong {
+  margin-top: 2px;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.student-page-hero__average small {
+  color: var(--student-muted);
+  font-size: 9px;
+}
+
+.student-report-download {
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 14px;
+  border: 1px solid #dfe9ff;
+  border-radius: 12px;
+  color: var(--student-primary);
+  background: linear-gradient(135deg, #f9fbff, #edf4ff);
+  font-size: 10px;
+  font-weight: 800;
+  box-shadow: 0 6px 16px rgba(36, 80, 176, 0.06);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.student-report-download:hover {
+  transform: translateY(-1px);
+  border-color: rgba(38, 94, 206, 0.3);
+  box-shadow: 0 10px 22px rgba(35, 76, 167, 0.1);
+}
+
+.student-report-download.is-primary {
+  background: linear-gradient(135deg, #eef4ff, #e1ebff);
+}
+
+.student-report-download.is-secondary {
+  background: #ffffff;
+}
+
+.student-report-download span {
+  white-space: nowrap;
+}
+
 .student-quiz-metrics { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
 .student-quiz-metrics article { min-height: 90px; display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 12px; padding: 16px; border: 1px solid #e0e5ed; border-radius: 16px; background: #fff; box-shadow: 0 8px 22px rgba(31,48,85,.05); }
 .student-quiz-metrics svg { grid-row: span 2; width: 42px; height: 42px; padding: 10px; border-radius: 12px; color: var(--student-primary); background: var(--student-soft); }

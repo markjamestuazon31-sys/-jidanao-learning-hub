@@ -6,6 +6,7 @@ import { getGradeExperience } from "../data/gradeExperience";
 import { subscribeStudentGrades } from "../services/dataService";
 import { flattenReleasedGrades, gradeRemark } from "../services/gradebookService";
 import { generateReportCard } from "../utils/pdf";
+import { generateStudentGradesWordReport } from "../utils/studentGradesWordReport";
 
 export default function StudentGrades() {
   const { user, profile } = useAuth();
@@ -55,12 +56,44 @@ export default function StudentGrades() {
     });
   }
 
+  function downloadWordReport() {
+    generateStudentGradesWordReport({
+      student: {
+        ...profile,
+        uid: user?.uid,
+        email: profile?.email || user?.email,
+      },
+      rows,
+      schoolName: "Jidanao Elementary School",
+    });
+  }
+
   return (
     <div className={`student-portal student-grades-page student-theme--${experience.theme}`}>
       <header className="student-page-hero">
         <div className="student-page-hero__icon"><ClipboardCheck size={30} /></div>
         <div><span>{profile?.gradeLevel} ACADEMIC RECORD</span><h1>My grades</h1><p>View grades released by your teacher across subjects and grading periods.</p></div>
-        <div className="student-page-hero__tools"><VoiceSettings compact />{rows.length > 0 && <button className="student-report-download" type="button" onClick={downloadReportCard}><FileDown size={16} /> Report card PDF</button>}<strong>{average || "—"}</strong><small>overall average</small></div>
+        <div className="student-page-hero__tools">
+          <VoiceSettings compact />
+
+          {rows.length > 0 && (
+            <div className="student-page-hero__actions">
+              <button className="student-report-download is-primary" type="button" onClick={downloadReportCard}>
+                <FileDown size={15} />
+                <span>Report card PDF</span>
+              </button>
+              <button className="student-report-download is-secondary" type="button" onClick={downloadWordReport}>
+                <FileDown size={15} />
+                <span>Word document</span>
+              </button>
+            </div>
+          )}
+
+          <div className="student-page-hero__average">
+            <strong>{average || "—"}</strong>
+            <small>overall average</small>
+          </div>
+        </div>
       </header>
 
       {loading ? (
