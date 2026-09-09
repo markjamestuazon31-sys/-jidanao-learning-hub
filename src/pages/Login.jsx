@@ -86,7 +86,7 @@ export default function Login() {
           <div className="jidanao-login-welcome">
             <span className="jidanao-login-eyebrow">
               <Sparkles size={16} aria-hidden="true" />
-              Learn. Play. Grow.
+              Learn. Play. Grow.sssss
             </span>
             <h1>Welcome back to your learning journey.</h1>
             <p>
